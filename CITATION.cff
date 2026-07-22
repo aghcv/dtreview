@@ -1,0 +1,28 @@
+cff-version: 1.2.0
+message: "If you use this repository, cite the final meta-review and this reproducibility repository."
+title: "Digital Patient Meta-Review: Reproducibility Repository"
+type: software
+authors:
+  - family-names: Ghorbannia
+    given-names: Arash
+  - family-names: Scerbo
+    given-names: Mark
+  - family-names: Witherow
+    given-names: Megan
+  - family-names: Poursardar
+    given-names: Faryaneh
+  - family-names: Pace
+    given-names: April
+  - family-names: Couper
+    given-names: Taryn
+  - family-names: Lee
+    given-names: Jae H.
+  - family-names: Watson
+    given-names: Ginger
+  - family-names: Weisel
+    given-names: Eric
+  - family-names: Combs
+    given-names: Charles
+repository-code: "https://github.com/aghcv/dtreview"
+date-released: 2026-07-22
+version: 0.1.0

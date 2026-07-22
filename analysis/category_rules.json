@@ -1,0 +1,77 @@
+{
+  "data_sources": {
+    "Imaging": "imaging|\\bmri\\b|computed tomography|\\bct\\b|\\bdicom\\b|x[- ]?ray|ultrasound|\\boct\\b",
+    "Wearables / sensors / IoT": "wearable|sensor|\\biot\\b|\\biomt\\b|smartwatch|\\bcgm\\b|\\becg\\b|\\bppg\\b",
+    "EHR / clinical records": "\\behr\\b|electronic (health|medical) record|medical record|clinical record",
+    "Simulation / literature": "simulation|synthetic data|literature|in[- ]?silico",
+    "Omics / genomics": "omics?|genom|genetic|proteom|transcriptom|metabolom",
+    "Laboratory / biomarkers": "laboratory|clinical test|biomarker|blood|plasma|serum",
+    "Lifestyle / environment": "lifestyle|environment|behavior|nutrition|food diar|activity"
+  },
+  "model_families": {
+    "Mechanistic / physics-based": "mechanistic|physics[- ]?based|finite element|\\bfea\\b|computational fluid|\\bcfd\\b|fluid.structur|biomechan|mathematical model",
+    "AI / machine learning": "artificial intelligence|machine learning|deep learning|neural network|\\bai\\b|\\bml\\b|data[- ]?driven|transformer|large language model|\\bllm",
+    "Hybrid": "hybrid|mechanistic.*(ai|ml)|(?:ai|ml).*(mechanistic|physics)",
+    "Statistical / probabilistic": "statistical|probabilistic|bayesian|regression",
+    "Simulation": "simulation|in[- ]?silico|virtual cohort|agent[- ]?based"
+  },
+  "standards": {
+    "HL7": "\\bhl7\\b",
+    "FHIR": "\\bfhir\\b",
+    "DICOM": "\\bdicom\\b",
+    "OMOP": "\\bomop\\b",
+    "Ontologies / identifiers": "ontolog|unique identifier|terminolog|semantic standard"
+  },
+  "computing": {
+    "Cloud": "cloud",
+    "Edge": "edge|on[- ]?device|local processing",
+    "Hybrid cloud-edge": "hybrid|cloud.*edge|edge.*cloud",
+    "High-performance computing": "high[- ]?performance|\\bhpc\\b|gpu|cluster|supercomput",
+    "Federated / distributed": "federated|distributed"
+  },
+  "domains": {
+    "Cardiovascular": "cardio|vascular|heart|arterial|coronary",
+    "Oncology": "oncol|cancer|tumou?r|neoplasm",
+    "Surgery / orthopedics / dentistry": "surg|orthop|dental|dentistry|musculoskel|rehabilitat",
+    "General / multisystem": "general|multisystem|multi[- ]?system|healthcare|cross[- ]?domain|multiple domain|various",
+    "Pharmacology / drug development": "pharma|drug|clinical trial|therapeutic development",
+    "Diabetes / endocrine": "diabet|endocrin|metabolic|glucose|insulin",
+    "Neurology / neuroscience": "neuro|brain|stroke|cognitive",
+    "Dermatology / ophthalmology": "dermat|skin|ophthalm|ocular|retina|cornea",
+    "Pulmonary / respiratory": "pulmonary|respirat|lung"
+  },
+  "functions": {
+    "Treatment / therapy planning": "therap|treatment|planning|intervention|surg|optimization",
+    "Prediction / prognosis / risk": "predict|prognos|risk|prevent|forecast",
+    "Diagnosis / detection": "diagnos|screen|detect|classif",
+    "Personalized care": "personali|precision medicine|individualized care",
+    "Drug development / trials": "drug|pharma|clinical trial|virtual trial|in[- ]?silico trial",
+    "Monitoring": "monitor|surveillance|tracking|follow[- ]?up",
+    "Education / training": "educat|train|teaching|simulation training",
+    "Decision support": "decision support|clinical decision|\\bcdss\\b"
+  },
+  "validation_methods": {
+    "Empirical / patient-data validation": "empirical|patient data|clinical data|real[- ]?world|retrospective|prospective|in vivo|in vitro",
+    "Simulation / benchmark comparison": "simulation|benchmark|synthetic|comparison",
+    "Cross-validation / holdout": "cross[- ]?validation|holdout|train.*test|test set",
+    "Sensitivity / uncertainty analysis": "sensitivit|uncertaint|robustness|error analysis",
+    "Expert evaluation": "expert|clinician evaluation|human evaluation",
+    "Conceptual / no model evaluation": "conceptual|not evaluated|no validation|validation not|not conduct"
+  },
+  "maturity": {
+    "Theoretical / conceptual": "theoretical|conceptual|aspirational",
+    "Prototype / proof of concept": "prototype|proof[- ]?of[- ]?concept|proof of concept|experimental|preclinical",
+    "Retrospective validation": "retrospective",
+    "Prospective / clinical study": "prospective|clinical trial|pilot study|clinical validation",
+    "Deployed / operational": "deployed|operational|implemented|routine clinical|commercial|fda[- ]?approved"
+  },
+  "barriers": {
+    "Interoperability / standards": "interoperab|standard|ontology|integration|data format|semantic",
+    "Privacy / security / governance": "privacy|security|governance|consent|data owner|cyber|access control",
+    "Ethical / legal / regulatory": "ethic|legal|regulat|liabilit|bias|fairness|accountab|transparen",
+    "Computing / scalability / resources": "comput|scalab|resource|cost|latency|infrastructure|energy|hardware",
+    "Clinical adoption / workflow": "clinical adoption|workflow|clinician|trust|implementation|training|workforce|acceptance",
+    "Data quality / availability / integration": "data quality|data availability|limited data|dataset|heterogen|harmoniz|silo|missing data|data integration|multimodal data",
+    "Validation / evidence / reproducibility": "validat|evidence|reproduc|benchmark|uncertaint|generaliz|external validation"
+  }
+}

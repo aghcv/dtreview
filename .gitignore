@@ -1,2 +1,12 @@
-
-oos/
+.DS_Store
+.venv/
+.cache/
+build/
+*.aux
+*.bbl
+*.blg
+*.log
+*.out
+*.synctex.gz
+__pycache__/
+*.pyc

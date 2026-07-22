@@ -1,0 +1,6 @@
+Conceptual dimension,Current extracted signal,Interpretive use
+Primary terminology,Digital twin (47); Virtual patient (5); Human digital twin (5); Patient digital twin (4); In silico patient / trial (3),Shows the distribution of the first identifiable primary construct per review record.
+Patient specificity,Patient-specific/individualized (56); generic/population/archetype (28).,Separates individualized models from population-level or archetypal constructs; categories may overlap.
+Temporal orientation,Dynamic/continuous (54); explicitly static (15).,Tests whether digital-twin terminology is accompanied by longitudinal updating.
+Data coupling,Bidirectional (33); one-way (39).,"Distinguishes model-, shadow-, and twin-like coupling claims."
+Hierarchy,Hierarchy levels are converted to an ordinal cell-to-system-of-systems scale for Figure 2; multi-level entries use the highest coded level.,Makes the spectrum plot reproducible while preserving the row-level source text.

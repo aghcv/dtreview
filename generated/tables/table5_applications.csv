@@ -1,0 +1,5 @@
+Application layer,Current extracted signal,Manuscript use
+Healthcare domains,Cardiovascular (32); Oncology (25); Surgery / orthopedics / dentistry (24); Neurology / neuroscience (18); Diabetes / endocrine (17); General / multisystem (15); Pharmacology / drug development (10); Pulmonary / respiratory (9); Dermatology / ophthalmology (3),Populates the rows of the application heatmap.
+Primary functions,Treatment / therapy planning (56); Prediction / prognosis / risk (49); Diagnosis / detection (46); Education / training (19); Personalized care (9); Monitoring (8); Drug development / trials (7); Decision support (5),Populates the columns of the application heatmap.
+Domain-function co-occurrence,Each review contributes to every matched domain-function pair.,Preserves multimodal and multidisciplinary applications without forcing one exclusive label.
+Translation interpretation,"Function counts describe claims synthesized by reviews, not necessarily clinically deployed systems.",Separates use-case breadth from maturity and implementation evidence.

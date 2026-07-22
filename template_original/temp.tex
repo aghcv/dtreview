@@ -1,0 +1,294 @@
+% filepath: /Users/aghorban/code/DentalDT/data/A_demonstration_of_the_LaTeX2e_class_file_for_SAGE_Publications/main.tex
+\documentclass[Afour,sageh,times]{sagej}
+
+% Optional packages commonly used with SAGE class
+\usepackage{url}
+\usepackage[colorlinks=true,
+            linkcolor=blue,
+            urlcolor=blue,
+            citecolor=blue]{hyperref}
+\hypersetup{colorlinks=true,linkcolor=black,citecolor=black,urlcolor=black}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{enumitem}
+
+
+\begin{document}
+
+
+
+\runninghead{Smith and Wittkopf}
+% [Digital Twin for Dental Hygiene]
+\title{TRACK: A Multimodal Adaptive-Learning Digital Twin for Students, Faculty, Providers, Staff, and Patients in Dental Healthcare Systems}
+
+%\author{Alistair Smith\affilnum{1} and Hendrik Wittkopf\affilnum{2}}
+
+%\affiliation{\affilnum{1}Sunrise Setting Ltd, UK\\
+%\affilnum{2}SAGE Publications Ltd, UK}
+
+%\corrauth{Alistair Smith, Sunrise Setting Ltd
+%Brixham Laboratory,
+%Freshwater Quarry,
+%Brixham, Devon,
+%TQ5~8BA, UK.}
+
+\email{aghorban@odu.edu}
+
+\begin{abstract}
+We present a concise, data-driven digital twin for a School of Dental Hygiene that integrates infrastructure, patient flow, and provider workloads. The system uses event sourcing to maintain a master state of facilities, programs, and care, updates probabilistic models from real observations, plans daily workload, and renders interactive, web-based visualizations. We outline the current prototype, required operational datasets, and Institutional Review Board (IRB) considerations including HIPAA/FERPA-compliant de-identification and governance.
+\keywords{metaverse, healthcare, medical training}
+\end{abstract}
+
+\maketitle
+
+
+
+\section{Introduction}
+
+Digital twins are increasingly used to monitor, simulate, and optimize complex systems by maintaining a continuously updated virtual representation linked to real-world data. While mature in domains such as manufacturing and infrastructure monitoring, the application of digital twins to healthcare education—where students, faculty, staff, providers, facilities, and patients interact within a dynamic service-learning environment—remains underdeveloped. Dental, medical, and allied-health programs present unique challenges because their operational reality is shaped not only by physical infrastructure, but also by human behavior, rotational schedules, competency progression, patient demand, and interprofessional workflows.
+
+Unlike structural or industrial twins that rely on fixed sensor networks to maintain fidelity, a digital twin for a healthcare training environment must integrate diverse and asynchronous data streams. These include operational logs from patient scheduling systems, metadata from electronic health records, student progression records from learning-management systems, faculty assignment data, facility usage logs, and real-time observations of patient flow, appointment adherence, and resource availability. Human actors—students, clinical faculty, adjunct providers, staff, and patients—effectively become “soft sensors” whose actions and experiences generate valuable signals for model updating. Without a mechanism to incorporate this multimodal information on a continuous basis, a digital twin can rapidly diverge from reality and lose its usefulness for forecasting or decision support.
+
+To address this need, we propose \textbf{TRACK} (Twin-based Real-time Analytics for Care and Knowledge), a multimodal, adaptive-learning digital twin architecture designed for healthcare training programs. TRACK emphasizes three principles: (i) continuous data ingestion from existing institutional systems; (ii) adaptive learning through uncertainty-based model refinement; and (iii) fully coupled integration across students, faculty, providers, staff, facilities, and patients. Instead of relying solely on pre-specified models, TRACK incorporates active-learning mechanisms that identify information gaps and, when necessary, issue targeted micro-queries to appropriate users. This enables the digital twin to remain aligned with real-world conditions while minimizing user burden.
+
+Although the conceptual framework is generalizable to any health sciences program with intertwined education and patient-care responsibilities, we illustrate its design considerations using a case example inspired by the Gene W. Hirschfeld School of Dental Hygiene at Old Dominion University. Dental hygiene education provides an ideal setting for exploring multimodal digital twins because its clinical operations, competency-based training, schedule variability, and multi-role coordination mirror the complexity found in larger health systems while remaining sufficiently structured for methodological development.
+
+This paper outlines the TRACK architecture, describes its data ingestion and adaptive-learning pipeline, and presents prototype sketches demonstrating how an institution could integrate operational logs, learning analytics, and clinical data streams to support forecasting, optimization, bottleneck identification, and risk assessment. We also discuss regulatory and governance considerations, including HIPAA, FERPA, and human-subjects protections relevant to digital-twin development. The goal is to provide a concise, practical framework that can guide academic programs, IRB committees, and operations teams in evaluating the feasibility and value of a multimodal, adaptive-learning digital twin ecosystem.
+
+\section{Methods}
+
+The TRACK framework (Twin-based Real-time Analytics for Care and Knowledge) is designed to maintain a continuously updated digital representation of a healthcare training environment by integrating multimodal data sources, modeling institutional workflows, and adapting dynamically through feedback-driven learning. This section describes the methodological foundations of the TRACK system, organized around five components: data ingestion, event-sourced state construction, adaptive learning, forecasting and optimization, and user-facing feedback loops.
+
+\subsection{Multimodal Data Sources}
+
+TRACK relies on data streams already produced as part of routine educational and clinical operations. These sources vary across institutions, but typically include:
+
+\begin{itemize}[leftmargin=*,itemsep=2pt]
+    \item \textbf{Appointment and patient-flow systems}: scheduled visits, arrival times, cancellations, no-shows, procedure codes, chair assignments, and visit durations.
+    \item \textbf{Electronic health record metadata}: encounter timestamps, treatment status flags, imaging or charting events (without storing PHI).
+    \item \textbf{Learning-management systems}: course participation logs, competency progression, assignment submissions, simulation-lab usage, and clinical assessment records.
+    \item \textbf{Faculty and provider assignment systems}: teaching schedules, supervisory assignments, clinic coverage patterns, and availability indicators.
+    \item \textbf{Facility and resource systems}: room scheduling, equipment status, sterilization cycles, maintenance logs, badge-swipe access data, and spatial connectivity information.
+    \item \textbf{Operational signals}: elevator wait times, corridor travel durations, time-to-room turnover, and workflow transition timestamps.
+\end{itemize}
+
+These multimodal inputs serve as the observational foundation for constructing and updating the digital twin. No identifiable data are required; all fields are de-identified or limited to metadata and institutional IDs.
+
+\subsection{Event-Sourced Digital Twin}
+
+Incoming observations are transformed into structured, immutable events that record changes to facilities, programs, and care workflows. TRACK adopts an event-sourcing approach for transparency and reproducibility. Each event contains a timestamp, a domain topic (facility, education, or care), and a structured payload describing the update.
+
+Replaying the full event log reconstructs a \textit{system state} containing:
+\begin{itemize}[leftmargin=*,itemsep=2pt]
+    \item the facility graph (rooms, spatial adjacency, resource attributes);
+    \item the education state (students, competencies, course requirements, assignments);
+    \item the care state (patients, visits, procedures, transitions between workflow states).
+\end{itemize}
+
+This replay mechanism allows the twin to regenerate historical states, compare alternative scenarios, and support audit trails required by IRB or operational review.
+
+\subsection{Adaptive-Learning Engine}
+
+Health sciences training environments are dynamic, with fluctuations in patient demand, faculty coverage, student performance, and resource availability. Static models degrade quickly. TRACK therefore incorporates an adaptive-learning engine that continuously updates model parameters and identifies gaps in knowledge.
+
+\paragraph{Bayesian updating.}
+Recurring processes such as daily appointment arrivals, no-show rates, wait-time distributions, and workflow durations are modeled using Bayesian estimators (e.g., Gamma–Poisson, Beta–Binomial, Gaussian updates). Posterior distributions capture uncertainty and update smoothly as new data arrive.
+
+\paragraph{Graph-based modeling.}
+Entities in a training clinic—students, faculty, providers, rooms, and patients—form a relational network. Graph neural networks (GNNs) or other relational models encode dependencies such as supervision patterns, spatial allocation, and co-occurring bottlenecks.
+
+\paragraph{Active learning and micro-queries.}
+When uncertainty rises beyond a threshold, the system generates targeted questions to users (e.g., students, faculty, staff) to explain anomalies. Examples include unexpected clinic delays, schedule deviations, equipment issues, or patient clustering. This “human-in-the-loop” querying reduces model drift while minimizing user burden.
+
+\paragraph{Drift monitoring.}
+The engine monitors divergence between predicted and observed patterns. If drift persists, the system triggers recalibration, scenario analysis, or re-weighting of specific data sources.
+
+\subsection{Forecasting and Optimization}
+
+Using current event-stream data and adaptive model posteriors, TRACK produces daily and weekly planning outputs:
+
+\begin{itemize}[leftmargin=*,itemsep=2pt]
+    \item \textbf{Forecasting}: expected patient volume, chair utilization, provider load, and student competency opportunities.
+    \item \textbf{Bottleneck detection}: identification of congestion in scheduling, room turnover, supervision coverage, and procedural flow.
+    \item \textbf{Optimization}: preliminary resource assignments such as student–faculty pairing, chair allocation, appointment distribution, and facility usage.
+    \item \textbf{Scenario evaluation}: “what-if” simulations assessing the impact of staffing changes, modified clinic hours, procedure mix variations, or schedule redesigns.
+\end{itemize}
+
+The planning layer is modular, enabling integration of queueing theory, discrete-event simulation, or optimization solvers as institutional needs evolve.
+
+\subsection{User-Facing Feedback Loops}
+
+The final methodological component is the design of user interactions through which the digital twin both informs and learns from stakeholders. TRACK supports role-specific interfaces:
+
+\begin{itemize}[leftmargin=*,itemsep=2pt]
+    \item \textbf{Students}: competency progression dashboards, workload summaries, and short micro-surveys capturing clinical experience.
+    \item \textbf{Faculty and providers}: patient-flow dashboards, teaching-load indicators, and targeted queries when unusual delays or workflow deviations occur.
+    \item \textbf{Staff}: operational task lists, resource-status indicators, and quick reporting interfaces for equipment or facility disruptions.
+    \item \textbf{Patients}: optional satisfaction or experience feedback (fully anonymized), appointment reminders, and wait-time estimations.
+\end{itemize}
+
+These bidirectional feedback channels ensure that the digital twin remains aligned with real-world conditions while providing actionable insights to improve educational quality, operational efficiency, and patient care.
+
+
+\newpage
+
+\begin{table*}[h]
+\small\sf\centering
+\caption{Digital Twin maturity levels across facility-operations, provider workflow, and training/education domains in the DentalDT ecosystem.\label{tab:dt_maturity}}
+\begin{tabular}{p{0.8cm}p{6cm}ccccc}
+\toprule
+\textbf{S. No.} & \textbf{Functionality Domain} & \textbf{Level-1} & \textbf{Level-2} & \textbf{Level-3} & \textbf{Level-4} & \textbf{Level-5} \\
+\midrule
+\multicolumn{7}{l}{\textbf{Facility \& Operations Twin}} \\
+1 & Static data of facility layout, asset inventories and service logs & X & X & X & X & X \\
+2 & Real-time scheduling, occupancy and workflow monitoring &  & X & X & X & X \\
+3 & Analytics for utilization, bottlenecks, resource forecasting &  &  & X & X & X \\
+4 & “What-if” simulation of patient-flow, resource allocation &  &  &  & X & X \\
+5 & Autonomous optimisation of scheduling and resource deployment &  &  &  &  & X \\
+\midrule
+\multicolumn{7}{l}{\textbf{Provider Workflow Twin}} \\
+6 & Provider/patient encounter logs, procedure history, baseline metrics & X & X & X & X & X \\
+7 & Integration of workflow data, wait times, handovers &  & X & X & X & X \\
+8 & Predictive modelling of bottlenecks, forecasting of volumes &  &  & X & X & X \\
+9 & Adaptive decision-support (real-time recommendations to provider) &  &  &  & X & X \\
+10 & Autonomous workflow management and continuous improvement loops &  &  &  &  & X \\
+\midrule
+\multicolumn{7}{l}{\textbf{Training \& Education Twin}} \\
+11 & Static representation of curriculum, competencies, module mapping & X & X & X & X & X \\
+12 & Student progress tracking, clinical exposure logging &  & X & X & X & X \\
+13 & Simulation-based practice, procedural rehearsal, “what-if” student scenarios &  &  & X & X & X \\
+14 & Intelligent feedback and adaptive learning pathways for students &  &  &  & X & X \\
+15 & Fully autonomous student-training ecosystem with self-optimising schedules &  &  &  &  & X \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+
+
+\section{System overview and pipeline}
+The implementation follows a modular pipeline:
+\begin{enumerate}[leftmargin=*,itemsep=2pt]
+  \item \textbf{Ingest observations:} CSV/YAML observations (patient arrivals, no-shows, travel times, elevator trips) are parsed by an \emph{ObservationFeeder} with Pydantic schemas and routed to model updaters.
+  \item \textbf{Event-sourced master state:} A \emph{MasterDigitalTwin} ingests structured events to build a \emph{Snapshot} containing facilities (zones/rooms/connectivity), programs (modules/people/assignments), and care (patients/visits/procedures/complications).
+  \item \textbf{Model updates:} Bayesian models (Gamma–Poisson arrivals, Beta–Binomial no-show, Normal travel-time, simple queue filter) update posteriors from observations.
+  \item \textbf{Planning:} A \emph{WorkloadPlanner} generates daily demand forecasts and capacity-aware assignment sketches (students/faculty/rooms) with unmet-demand summaries.
+  \item \textbf{Visualization:} Plotly renders an HTML layout showing facility topology, student module progress, and forecast charts with an interactive date slider.
+  \item \textbf{Tables/exports:} A \emph{SnapshotTables} view normalizes state into analysis-ready tables for external pipelines.
+\end{enumerate}
+
+\paragraph{Key artifacts (by module).}
+\begin{itemize}[leftmargin=*,itemsep=2pt]
+  \item \texttt{src/digital\_twin/store.py}: \emph{MasterDigitalTwin} (ingest, snapshot, curriculum/students loaders).
+  \item \texttt{src/digital\_twin/observations/schemas.py, feeder.py}: Pydantic schemas and CSV loaders.
+  \item \texttt{src/digital\_twin/bayes/*}: Arrivals, no-show, travel-time, and queue models.
+  \item \texttt{src/digital\_twin/operations/planning.py}: \emph{WorkloadPlanner} (forecast + assignments).
+  \item \texttt{src/digital\_twin/visualization.py}: Plotly HTML generator with tabs (facility, students, schedule, forecast).
+  \item \texttt{src/digital\_twin/views.py}: \emph{SnapshotTables} for analytics.
+  \item \texttt{src/digital\_twin/examples/visualize\_twin.(yml|py)}: Example config + end-to-end runner.
+\end{itemize}
+
+\section{Methods}
+\subsection{Event-sourced state}
+All domain changes are captured as immutable events (\texttt{Event} with \texttt{Topic}: facility, program, care). Replaying events yields a \texttt{Snapshot}:
+\begin{itemize}[leftmargin=*,itemsep=2pt]
+  \item \textbf{Facility:} create zones/rooms; update room attributes (coordinates); update undirected connectivity between rooms.
+  \item \textbf{Program:} create modules; add people (students/faculty); create/update assignments; set module requirements.
+  \item \textbf{Care:} create patients; visits (start/end); procedures (start/end, attributes); complications.
+\end{itemize}
+
+\subsection{Data-driven models}
+Observations (arrivals per day, no-show outcomes, travel-time samples, elevator trips) feed Bayesian estimators:
+\begin{itemize}[leftmargin=*,itemsep=2pt]
+  \item \emph{Arrivals:} Gamma–Poisson for rate over time and zones.
+  \item \emph{No-show:} Beta–Binomial for show-up probability by clinic/zone.
+  \item \emph{Travel:} Normal for corridor travel time statistics.
+  \item \emph{Queue:} Simple Kalman filter for elevator wait estimation.
+\end{itemize}
+
+\subsection{Planning and visualization}
+Given posterior means and capacity inputs (rooms, faculty, students), the planner produces day-level forecasts and draft assignment rows. The HTML layout shows the room graph, forecast series with uncertainty band, and assignment tables; a student tab summarizes module requirements and progress.
+
+\section{Data sources and datasets}
+The twin requires real operational data (no dummy values) with stable keys for linkage:
+\begin{itemize}[leftmargin=*,itemsep=2pt]
+  \item \textbf{Infrastructure:} clinics, zones/rooms (IDs, names, coordinates), room connectivity, equipment inventory/maintenance, sterilization logs.
+  \item \textbf{Workforce:} faculty directory and schedules; student rosters, cohorts, rotations, module requirement fulfillment.
+  \item \textbf{Patients and care:} de-identified patient master, appointments, encounters/visits, CDT-coded procedures, imaging metadata (URIs only).
+  \item \textbf{Operational signals:} arrivals-by-date, scheduled vs. arrived (no-show), corridor travel-time samples, elevator trips with wait estimates.
+\end{itemize}
+Identifiers should be system-generated IDs (e.g., \texttt{patient\_id}, \texttt{student\_id}, \texttt{faculty\_id}, \texttt{room\_id}) with referential integrity across files. Dates/times use ISO-8601.
+
+\section{IRB, HIPAA/FERPA, and governance}
+\subsection{Human-subjects and dataset tiers}
+\begin{itemize}[leftmargin=*,itemsep=2pt]
+  \item \textbf{Patients (HIPAA):} Prefer \emph{de-identified} (Safe Harbor) or \emph{limited datasets}. Remove direct identifiers (names, full addresses, contacts, MRN). For Safe Harbor, keep years only for dates; for limited datasets (under a DUA), full dates are permissible. Replace full DOB with year (or age; collapse $\ge 90$ to 90+). Maintain a secure MRN$\rightarrow$analytic-ID mapping outside analytics.
+  \item \textbf{Students (FERPA):} Clinical placements and performance are non-directory. Use \texttt{student\_id}; minimize names/emails in analytic exports. Obtain appropriate approvals or de-identify.
+  \item \textbf{Faculty/staff (PII):} Treat emails/phones/schedules as PII. Use \texttt{faculty\_id} for linkage; share minimum necessary.
+\end{itemize}
+
+\subsection{Consent, waivers, and DUAs}
+\begin{itemize}[leftmargin=*,itemsep=2pt]
+  \item Determine if the activity is research vs. quality improvement/operations.
+  \item For identified PHI, obtain HIPAA authorization or IRB waiver with justification (minimal risk, impracticability, privacy protections).
+  \item For limited datasets, execute Data Use Agreements specifying recipients, purposes, and safeguards.
+\end{itemize}
+
+\subsection{Security controls}
+\begin{itemize}[leftmargin=*,itemsep=2pt]
+  \item Encryption in transit/at rest; role-based access; audit logs.
+  \item Separate linkage files (e.g., MRN map) in a restricted enclave.
+  \item Data retention and destruction schedules aligned to policy.
+\end{itemize}
+
+\subsection{Minimization and free-text risks}
+Prefer structured fields (codes, timestamps) over free text; avoid note fields that may contain PHI. For imaging, store only metadata and secure URIs; enforce access at the PACS.
+
+\section{Case study: School of Dental Hygiene}
+\textbf{Setting.} Multi-operatory clinic with student rotations supervised by faculty. \\
+\textbf{Twin build.} Facility graph (rooms and adjacency), student modules \& assignments, arrivals/no-show models; planner generates day-level forecasts and draft room/faculty/student assignments. \\
+\textbf{Current status.} End-to-end ingestion, forecasting, and HTML visualization are operational; IRB submission and production data feeds are the next milestones.
+
+\section{Results (prototype status)}
+The prototype renders: (i) a facility layout with room graph, (ii) a 365-day forecast line chart with an uncertainty band and a date marker, (iii) student progress dashboards, and (iv) schedule cards for selected windows. Tables can be exported via \texttt{SnapshotTables}.
+
+\section{Discussion}
+This architecture favors explainability (event log), auditability (replay to state), and modular learning (swappable Bayesian components). Future work includes robust optimization for scheduling, integration with EHR scheduling APIs, and faculty roster optimization.
+
+\section*{NOTES (to be removed)}
+\textbf{Candidate venues:} JAMIA Open, PLOS Digital Health, Journal of Dental Education (JDE), IEEE Journal of Biomedical and Health Informatics, Methods of Information in Medicine, AMIA (Annual/CRI), IHI Forum (QI), INFORMS Healthcare. \\
+\textbf{Timeline (draft):}
+\begin{enumerate}[leftmargin=*,itemsep=2pt]
+  \item Month 0--1: IRB scoping, protocol/DUA drafting, data inventory, de-ident templates.
+  \item Month 2--3: Build ETL from EHR/registrar/HR/inventory; validate referential integrity.
+  \item Month 4--5: Model calibration (arrivals/no-show); pilot planner with one clinic; usability feedback.
+  \item Month 6: Prospective evaluation; manuscript polish and submission.
+\end{enumerate}
+\textbf{Next steps:}
+\begin{itemize}[leftmargin=*,itemsep=2pt]
+  \item Finalize de-identification and secure linkage processes (MRN$\leftrightarrow$analytic IDs).
+  \item Automate nightly extracts; add equipment/maintenance and sterilization compliance feeds.
+  \item Add scheduling objective variants (wait-time fairness, learning goals), sensitivity analyses, and drift monitoring.
+\end{itemize}
+
+\section*{Acknowledgments}
+We thank clinic operations and IT teams for data access planning and workflow input.
+
+\section*{Declaration of conflicting interests}
+The author(s) declared no potential conflicts of interest.
+
+\section*{Funding}
+This work received no specific grant from any funding agency.
+
+\section*{Data availability}
+Templates and example configurations are available in the project repository. Operational datasets are institution-confidential.
+
+\begin{thebibliography}{99}\setlength{\itemsep}{2pt}
+\bibitem{dt-health}
+Negri E, et al. A Review of Digital Twin Applications in Manufacturing. \emph{Computers in Industry}. 2017.
+\bibitem{hipaa}
+U.S. HHS. Guidance Regarding Methods for De-identification of PHI. 2012. \url{https://www.hhs.gov/}
+\bibitem{ferpa}
+U.S. Dept. of Education. FERPA Guidance. \url{https://studentprivacy.ed.gov/}
+\end{thebibliography}
+
+\end{document}

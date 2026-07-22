@@ -1,0 +1,8 @@
+Recommendation,Priority,Evidence basis and suggested action
+Standardize terminology,High,"Report explicit criteria for digital model, digital shadow, digital twin, patient digital twin, virtual patient, and in silico patient."
+Define maturity levels,High,"Classify patient specificity, hierarchy, temporal updating, data coupling, feedback, validation, and clinical integration."
+Strengthen validation,High,"Require clear validation datasets, internal/external validation where relevant, and sensitivity or uncertainty analysis."
+Build interoperable infrastructure,High,"Report applicable FHIR, HL7, DICOM, OMOP, ontology, identifier, and governance mechanisms."
+Provide reproducible supplements,High,"Publish row-level extraction outputs, executable rules, data-quality checks, and plotting datasets."
+Study workflow and governance,Medium,"Evaluate clinician trust, liability, consent, bias, interpretability, equity, and implementation burden."
+Move toward prospective evidence,High,"Distinguish conceptual promise from retrospective validation, prospective studies, and deployed clinical workflows."

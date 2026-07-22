@@ -1,0 +1,210 @@
+\documentclass[Afour,sagev,times]{sagej}
+
+% Optional packages commonly used with SAGE class
+\usepackage{url}
+\usepackage[colorlinks=true,
+            linkcolor=blue,
+            urlcolor=blue,
+            citecolor=blue]{hyperref}
+\hypersetup{colorlinks=true,linkcolor=black,citecolor=black,urlcolor=black}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{enumitem}
+%\usepackage[numbers,super]{natbib}
+
+\begin{document}
+
+\runninghead{Short Running Title}
+\title{Full Manuscript Title}
+
+%\author{First Author\affilnum{1} and Second Author\affilnum{2}}
+
+%\affiliation{\affilnum{1}Department, Institution, Country\\
+%\affilnum{2}Department, Institution, Country}
+
+%\corrauth{Corresponding Author Name, Department, Institution, Address.}
+
+\email{corresponding.author@email.edu}
+
+\begin{abstract}
+% Write a concise abstract here.
+\end{abstract}
+
+\keywords{keyword 1, keyword 2, keyword 3}
+
+\maketitle
+
+%=============================
+%======== INTRODUCTION
+%=============================
+\section{Introduction}
+
+% Introduce the problem, motivation, gap in knowledge, and study objective.
+
+\begin{figure*}[ht]
+    \centering
+    %\includegraphics[width=0.999\textwidth]{figures/figure1}
+    \caption{
+    \textbf{Figure title.}
+    Brief figure description.
+    }
+    \label{fig:figure1}
+\end{figure*}
+
+%=============================
+%======== METHODS
+%=============================
+\section{Methods}
+
+% Describe the overall study design, framework, model, experiment, or analysis pipeline.
+
+\subsection{Study Design or Framework Overview}
+
+% Describe the overall design or conceptual framework.
+
+\subsection{Data Sources or Materials}
+
+% Describe datasets, experimental materials, participants, simulations, or inputs.
+
+\subsection{Model, Algorithm, or Analytical Method}
+
+% Describe the core method, computational model, statistical model, or experimental procedure.
+
+\subsection{Validation, Evaluation, or Statistical Analysis}
+
+% Describe validation strategy, metrics, uncertainty analysis, and statistical tests.
+
+\subsection{Implementation or Reproducibility}
+
+% Describe software, code availability, computational environment, or reproducibility details.
+
+%=============================
+%======== RESULTS
+%=============================
+\section{Results}
+
+% Present the main findings in a logical order.
+
+\subsection{Primary Finding}
+
+% Describe the first major result.
+
+\subsection{Secondary Finding}
+
+% Describe the second major result.
+
+\subsection{Sensitivity, Robustness, or Subgroup Analysis}
+
+% Describe additional analyses, robustness checks, or subgroup results.
+
+\begin{table*}[ht]
+\footnotesize\sf
+\centering
+\caption{Table title.\label{tab:table1}}
+\begin{tabular}{lll}
+\hline
+\textbf{Column 1} & \textbf{Column 2} & \textbf{Column 3} \\
+\hline
+% Row 1 & Row 1 & Row 1 \\
+% Row 2 & Row 2 & Row 2 \\
+\hline
+\end{tabular}
+\end{table*}
+
+%=============================
+%======== DISCUSSION
+%=============================
+\section{Discussion}
+
+% Interpret the findings, explain their significance, and relate them to prior work.
+
+\subsection{Principal Findings}
+
+% Summarize the most important findings without repeating all results.
+
+\subsection{Comparison With Prior Work}
+
+% Compare findings with existing literature.
+
+\subsection{Implications}
+
+% Discuss scientific, clinical, educational, engineering, or translational implications.
+
+\subsection{Limitations}
+
+% Discuss limitations, assumptions, uncertainties, and generalizability.
+
+\subsection{Future Work}
+
+% Describe next steps and future research directions.
+
+%=============================
+%======== CONCLUSION
+%=============================
+\section{Conclusion}
+
+% Provide a brief concluding paragraph that reinforces the main contribution.
+
+%=============================
+%======== APPENDIX
+%=============================
+\section*{Appendix A. Supplementary Methods or Data Architecture}
+
+% Add supplementary methodological details, schemas, derivations, or extended descriptions.
+
+\subsection*{A.1 Data Sources or Inputs}
+
+\begin{itemize}[leftmargin=*,itemsep=3pt]
+    \item Placeholder item 1.
+    \item Placeholder item 2.
+    \item Placeholder item 3.
+\end{itemize}
+
+\subsection*{A.2 Processing or Ingestion Pipeline}
+
+\begin{enumerate}[leftmargin=*,itemsep=3pt]
+    \item \textbf{Step 1:} Description.
+    \item \textbf{Step 2:} Description.
+    \item \textbf{Step 3:} Description.
+\end{enumerate}
+
+\subsection*{A.3 Core Schemas, Variables, or Parameters}
+
+\begin{itemize}[leftmargin=*,itemsep=3pt]
+    \item \textbf{Category 1:} Description.
+    \item \textbf{Category 2:} Description.
+    \item \textbf{Category 3:} Description.
+\end{itemize}
+
+\section*{Appendix B. Supplementary Validation, Compliance, or Implementation Details}
+
+% Add extended validation results, governance details, reproducibility notes, or additional tables.
+
+\subsection*{B.1 Architecture or Implementation}
+
+\begin{itemize}[leftmargin=*,itemsep=3pt]
+    \item Placeholder item 1.
+    \item Placeholder item 2.
+    \item Placeholder item 3.
+\end{itemize}
+
+\subsection*{B.2 Evaluation or Compliance Considerations}
+
+\begin{itemize}[leftmargin=*,itemsep=3pt]
+    \item Placeholder item 1.
+    \item Placeholder item 2.
+    \item Placeholder item 3.
+\end{itemize}
+
+\subsection*{B.3 Risk, Safety, or Quality-Control Notes}
+
+\begin{itemize}[leftmargin=*,itemsep=3pt]
+    \item Placeholder item 1.
+    \item Placeholder item 2.
+    \item Placeholder item 3.
+\end{itemize}
+
+\bibliographystyle{plain}
+\bibliography{source}
+
+\end{document}

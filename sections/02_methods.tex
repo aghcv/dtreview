@@ -1,0 +1,25 @@
+\section{Methods}
+
+\subsection{Design and protocol}
+
+We conducted a systematic review of reviews following the project PROSPERO protocol. The review question asked how the digital patient spectrum---including digital twins, virtual patients, in silico patients, and synthetic patients---is conceptualized, constructed, validated, applied, and limited across healthcare literature. The protocol draft is preserved in the repository at \path{protocols/PROSPERO_registration_draft_AG.docx}.
+
+\subsection{Information sources and eligibility}
+
+Searches were planned for Web of Science, PubMed, IEEE Xplore, Google Scholar, and grey-literature sources including arXiv, bioRxiv, and medRxiv. Search concepts combined digital twin and adjacent constructs with healthcare and review-methodology terms. Eligibility was restricted to English-language reviews published from 2020 onward that addressed patient-linked physiological, biomechanical, biological, or adjacent computational models. Primary studies and non-patient digital twins of hospitals, logistics, infrastructure, or devices without patient-level modeling were excluded.
+
+\subsection{Study selection and inconsistency resolution}
+
+Screening and adjudication followed the project inconsistency-resolution protocol preserved at \path{protocols/CADIMA_Inconsistency_Resolution_Protocol.docx}. The PRISMA flow follows the PRISMA 2020 framework.\cite{page2021prisma} Selection counts are stored separately from the extraction workbook in \path{data/config/prisma_counts.csv}; the pipeline performs arithmetic checks before drawing Figure~\ref{fig:prisma}.
+
+\subsection{Data extraction}
+
+Data extraction used a standardized CADIMA-aligned form organized by the six review questions. Extracted fields included bibliographic data, conceptual definitions, related constructs, hierarchy level, model type, data sources, coupling mode, temporal orientation, modeling approach, integration standards, computing infrastructure, validation method, application domain, function, maturity, limitations, barriers, future priorities, reviewer notes, and quality-appraisal fields. The source workbook is preserved unchanged at \path{data/raw/data_extraction_sheet_template.xlsx}.
+
+\subsection{Descriptive synthesis}
+
+Synthesis was narrative and descriptive; no quantitative pooling was planned. The pipeline applies predefined, case-insensitive regular expressions to prespecified extraction fields. It removes common null or negation phrases before classification, counts each theme at most once per review record, and permits a record to contribute to multiple categories. Primary terminology is assigned hierarchically from the title, related-construct field, and core-definition field. Multi-level hierarchy entries are represented by the highest coded biological level for visualization. The complete rules are versioned in \path{analysis/category_rules.json}, and the row-level classifications are exported to \path{generated/data/record_level_classification.csv}.
+
+\subsection{Reproducibility and quality control}
+
+The executable script \path{analysis/generate_outputs.py} regenerates seven manuscript tables, six figures, manuscript result snippets, row-level plotting data, and an automated data-quality report. The report checks required fields, duplicate normalized titles, publication-year conflicts, missingness, output completeness, and PRISMA arithmetic. Generated tables are written as both CSV and LaTeX, and figures as both PDF and PNG. These generated files are committed so that the Overleaf manuscript can compile without running Python, while the underlying code remains the authoritative derivation.

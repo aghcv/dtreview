@@ -1,0 +1,7 @@
+Pipeline stage,Current extracted evidence,Table/figure implication
+Data acquisition,Imaging (49); Wearables / sensors / IoT (43); EHR / clinical records (29); Omics / genomics (24); Lifestyle / environment (16); Laboratory / biomarkers (15); Simulation / literature (14),Populates the input layer of the computational pipeline figure.
+Model construction,AI / machine learning (50); Mechanistic / physics-based (38); Hybrid (33); Simulation (13); Statistical / probabilistic (9),"Organizes model families as mechanistic, data-driven, hybrid, statistical, and simulation-based approaches."
+Personalization and coupling,"Patient specificity, temporal updating, and coupling direction are classified separately.",Prevents baseline personalization from being treated automatically as a continuously updated twin.
+Interoperability standards,DICOM (15); HL7 (14); FHIR (13); OMOP (11); Ontologies / identifiers (0),Shows named implementation standards separately from broad interoperability concerns.
+Computing infrastructure,Cloud (33); Hybrid cloud-edge (17); Edge (14); High-performance computing (4); Federated / distributed (3),"Summarizes cloud, edge, hybrid, high-performance, and distributed computing mentions."
+Outputs,Treatment / therapy planning (56); Prediction / prognosis / risk (49); Diagnosis / detection (46); Education / training (19); Personalized care (9); Monitoring (8); Drug development / trials (7); Decision support (5),Connects pipeline outputs to the application landscape.

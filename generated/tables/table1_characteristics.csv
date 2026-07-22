@@ -1,0 +1,6 @@
+Dimension,Current extracted signal,Interpretive use
+Evidence base,64 coded rows; 62 unique normalized titles; 2 duplicate-title rows.,Defines the analytic set and makes title-level duplicate reconciliation explicit.
+Publication years,2022: 6; 2023: 9; 2024: 21; 2025: 28; missing: 0.,Shows the temporal distribution using the canonical publication-year field with documented fallback.
+Protocol scope,"English-language reviews from 2020 onward addressing patient-linked physiological, biomechanical, biological, or adjacent computational models.",Keeps eligibility interpretation tied to the PROSPERO protocol.
+Dominant domains,Cardiovascular (32); Oncology (25); Surgery / orthopedics / dentistry (24); Neurology / neuroscience (18); Diabetes / endocrine (17); General / multisystem (15),Provides the empirical basis for the application landscape.
+Quality context,Quality-appraisal and reproducibility fields are heterogeneous and incompletely populated.,Supports descriptive synthesis and cautious interpretation rather than pooled certainty claims.
