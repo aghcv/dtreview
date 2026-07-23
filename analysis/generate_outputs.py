@@ -556,6 +556,64 @@ def figure_prisma(counts: Mapping[str, int], warnings: Sequence[str], output_dir
     save_figure(fig, output_dir, "fig1_prisma")
 
 
+def categorical_cell_offsets(count: int) -> list[tuple[float, float]]:
+    """Return centered rectangular offsets that remain inside one category cell.
+
+    The Figure 2 cells are wider than they are tall after the legend is placed,
+    so the packing favors columns over rows. Five columns by three rows can
+    distinguish the largest observed cell (14 records) while maintaining a
+    clear margin from every categorical boundary.
+    """
+
+    if count < 0:
+        raise ValueError("count must be non-negative")
+    if count == 0:
+        return []
+    if count == 1:
+        return [(0.0, 0.0)]
+
+    columns = min(5, max(2, math.ceil(math.sqrt(count * 1.6))))
+    rows = math.ceil(count / columns)
+    x_spacing = 0.19
+    y_extent = min(0.30, 0.15 * max(rows - 1, 1))
+    y_positions = np.linspace(-y_extent, y_extent, rows) if rows > 1 else np.array([0.0])
+
+    offsets: list[tuple[float, float]] = []
+    remaining = count
+    for row_index, y_offset in enumerate(y_positions):
+        row_count = min(columns, remaining)
+        x_positions = (np.arange(row_count) - (row_count - 1) / 2) * x_spacing
+        if row_index % 2:
+            x_positions = x_positions[::-1]
+        offsets.extend((float(x_offset), float(y_offset)) for x_offset in x_positions)
+        remaining -= row_count
+    return offsets
+
+
+def spread_points_within_cells(records: pd.DataFrame) -> pd.DataFrame:
+    """Spread coincident categorical points without changing cell membership."""
+
+    plotted = records.copy()
+    plotted["x_plot"] = plotted["coupling_score"].astype(float)
+    plotted["y_plot"] = plotted["hierarchy_score"].astype(float)
+
+    for _, group in plotted.groupby(["coupling_score", "hierarchy_score"], sort=True):
+        stable = group.assign(
+            _included_sort=pd.to_numeric(group["included_studies_numeric"], errors="coerce").fillna(-1),
+            _article_sort=pd.to_numeric(group["article id"], errors="coerce").fillna(np.inf),
+        ).sort_values(["_included_sort", "_article_sort"], ascending=[False, True])
+
+        offsets = categorical_cell_offsets(len(stable))
+        offsets.sort(
+            key=lambda pair: (pair[0] / 0.38) ** 2 + (pair[1] / 0.30) ** 2,
+            reverse=True,
+        )
+        for record_index, (x_offset, y_offset) in zip(stable.index, offsets):
+            plotted.at[record_index, "x_plot"] = float(plotted.at[record_index, "coupling_score"]) + x_offset
+            plotted.at[record_index, "y_plot"] = float(plotted.at[record_index, "hierarchy_score"]) + y_offset
+    return plotted
+
+
 def figure_spectrum(bundle: AnalysisBundle, output_dir: Path) -> None:
     records = bundle.records.copy()
     plotted = records.dropna(subset=["hierarchy_score", "coupling_score"]).copy()
@@ -566,8 +624,11 @@ def figure_spectrum(bundle: AnalysisBundle, output_dir: Path) -> None:
         "Biological hierarchy, temporal updating, and direction of data coupling",
     )
     for index, fill in enumerate(["#F3F6F9", "#EEF7F5", "#FFF7EE", "#EFF4F9"]):
-        ax.axvspan(index - 0.45, index + 0.45, color=fill, zorder=0)
-    rng = np.random.default_rng(20260722)
+        ax.axvspan(index - 0.5, index + 0.5, color=fill, zorder=0)
+    for boundary in np.arange(-0.5, 4.0, 1.0):
+        ax.axvline(boundary, color="#C7D3DE", linewidth=0.9, zorder=1)
+    for boundary in np.arange(0.5, 7.0, 1.0):
+        ax.axhline(boundary, color="#C7D3DE", linewidth=0.9, zorder=1)
     if plotted.empty:
         ax.text(0.5, 0.5, "No records had both hierarchy and coupling classifications.", ha="center", va="center")
     else:
@@ -585,8 +646,7 @@ def figure_spectrum(bundle: AnalysisBundle, output_dir: Path) -> None:
         terms = list(plotted["primary_term"].value_counts().index)
         marker_map = {term: marker_choices[index % len(marker_choices)] for index, term in enumerate(terms)}
         sizes = plotted["included_studies_numeric"].fillna(5).clip(lower=1, upper=250).map(lambda n: 35 + 18 * math.sqrt(n))
-        plotted["x_plot"] = plotted["coupling_score"] + rng.normal(0, 0.055, len(plotted))
-        plotted["y_plot"] = plotted["hierarchy_score"] + rng.normal(0, 0.075, len(plotted))
+        plotted = spread_points_within_cells(plotted)
         for (domain, term), group in plotted.groupby(["plot_domain", "primary_term"], dropna=False):
             ax.scatter(
                 group["x_plot"],
@@ -665,11 +725,13 @@ def figure_spectrum(bundle: AnalysisBundle, output_dir: Path) -> None:
     ax.set_yticks([1, 2, 3, 4, 5, 6], ["Cell/molecular", "Tissue", "Organ/system", "Person/body", "Population", "System of systems"])
     ax.set_xlim(-0.5, 3.5)
     ax.set_ylim(0.5, 6.5)
-    ax.grid(axis="y")
     ax.set_axisbelow(True)
     ax.spines["left"].set_color(GRID)
     ax.spines["bottom"].set_color(GRID)
-    figure_note(fig, "Bubble area reflects included-paper count (capped at 250); labels identify the eight largest reviews.")
+    figure_note(
+        fig,
+        "Points are deterministically spread within each categorical cell to reduce overlap; bubble area reflects included-paper count (capped at 250).",
+    )
     fig.tight_layout(rect=(0.035, 0.06, 0.78, 0.89))
     save_figure(fig, output_dir, "fig2_spectrum")
 

@@ -53,6 +53,30 @@ class AnalysisHelpersTest(unittest.TestCase):
         self.assertEqual(len(warnings), 1)
         self.assertIn("imply 59", warnings[0])
 
+    def test_categorical_cell_offsets_are_unique_and_bounded(self):
+        offsets = MODULE.categorical_cell_offsets(14)
+        self.assertEqual(len(offsets), 14)
+        self.assertEqual(len(set(offsets)), 14)
+        self.assertTrue(all(abs(x) <= 0.38 for x, _ in offsets))
+        self.assertTrue(all(abs(y) <= 0.30 for _, y in offsets))
+
+    def test_spread_points_remain_in_their_original_cells(self):
+        frame = pd.DataFrame(
+            {
+                "article id": range(1, 15),
+                "included_studies_numeric": range(14, 0, -1),
+                "coupling_score": [2.0] * 14,
+                "hierarchy_score": [3.0] * 14,
+            }
+        )
+        first = MODULE.spread_points_within_cells(frame)
+        second = MODULE.spread_points_within_cells(frame)
+        self.assertEqual(len(set(zip(first["x_plot"], first["y_plot"]))), 14)
+        self.assertTrue(first["x_plot"].between(1.5, 2.5, inclusive="neither").all())
+        self.assertTrue(first["y_plot"].between(2.5, 3.5, inclusive="neither").all())
+        pd.testing.assert_series_equal(first["x_plot"], second["x_plot"])
+        pd.testing.assert_series_equal(first["y_plot"], second["y_plot"])
+
 
 if __name__ == "__main__":
     unittest.main()

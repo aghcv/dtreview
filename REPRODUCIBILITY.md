@@ -29,7 +29,7 @@ Primary terminology is the first matching construct found, in order, in the titl
 ## Figures
 
 1. **PRISMA flow:** generated from `data/config/prisma_counts.csv` and arithmetically checked.
-2. **Digital patient spectrum:** hierarchy versus temporal/coupling score; bubble area uses reported included-paper counts and is capped for readability.
+2. **Digital patient spectrum:** hierarchy versus temporal/coupling score; bubble area uses reported included-paper counts and is capped for readability. Records sharing the same categorical combination are deterministically packed within that cell (up to five columns by three rows), with offsets bounded away from the category borders. This reduces overplotting without changing any record's hierarchy or coupling classification.
 3. **Computational pipeline:** record-level counts for inputs, model families, and functions.
 4. **Validation landscape:** non-mutually exclusive validation and maturity counts.
 5. **Application landscape:** domain-function co-occurrence heatmap.
