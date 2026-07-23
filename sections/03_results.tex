@@ -17,7 +17,9 @@ The evidence-base characteristics are summarized in Table~\ref{tab:characteristi
 
 \subsection{Conceptual definitions and the digital patient spectrum}
 
-The included reviews used digital twin terminology alongside patient digital twin, human digital twin, virtual patient, in silico patient or trial, digital patient, synthetic patient, and adjacent constructs. Patient specificity, biological hierarchy, temporal updating, and coupling direction varied independently, supporting a multidimensional spectrum rather than a single lexical definition (Table~\ref{tab:concepts}; Figure~\ref{fig:spectrum}).
+The included reviews used digital twin terminology alongside patient digital twin, human digital twin, virtual patient, in silico patient or trial, digital patient, synthetic patient, and adjacent constructs. Digital twin was the primary classified term in 47 records, while virtual patient, human digital twin, patient digital twin, and in silico patient or trial were less frequent (Table~\ref{tab:concepts}).
+
+The operational attributes emphasized in the National Academies definition were not uniformly co-reported.\cite{nasem2024digitaltwins} Dynamic or continuous updating language appeared in 54 records and bidirectional coupling in 33, while 39 records described one-way coupling and 15 described explicitly static constructs. These non-mutually exclusive patterns show that patient specificity, biological hierarchy, temporality, and coupling direction varied independently. The distribution in Table~\ref{tab:concepts} and Figure~\ref{fig:spectrum} therefore supports a multidimensional spectrum rather than classification by terminology alone; it is not a compliance judgment on individual models.
 
 \input{generated/tables/table2_concepts}
 
@@ -30,7 +32,9 @@ The included reviews used digital twin terminology alongside patient digital twi
 
 \subsection{Modeling and computational pipeline}
 
-Construction approaches were multimodal and heterogeneous. The extraction framework distinguishes data inputs, model families, personalization and coupling, named interoperability standards, computing infrastructure, and reported clinical or research outputs (Table~\ref{tab:pipeline}; Figure~\ref{fig:pipeline}).
+Construction approaches were multimodal and heterogeneous. Imaging was reported in 49 records, wearables or sensor data in 43, EHR or clinical-record data in 29, and omics or genomics in 24. AI or machine-learning approaches appeared in 50 records, mechanistic or physics-based models in 38, and hybrid approaches in 33. These distributions indicate that digital patient construction was commonly described as a combination of data-driven and mechanistic components rather than a single model class (Table~\ref{tab:pipeline}; Figure~\ref{fig:pipeline}).
+
+Named interoperability standards were reported less consistently than multimodal inputs or model families. DICOM appeared in 15 records, HL7 in 14, FHIR in 13, and OMOP in 11; no ontology or identifier category was detected by the current classification rules. Thus, Table~\ref{tab:pipeline} and Figure~\ref{fig:pipeline} document reported standards awareness, but not implementation conformance, semantic interoperability, or end-to-end data provenance.
 
 \input{generated/tables/table3_pipeline}
 
@@ -43,7 +47,11 @@ Construction approaches were multimodal and heterogeneous. The extraction framew
 
 \subsection{Validation, fidelity, and clinical maturity}
 
-Validation reporting ranged from conceptual discussion to empirical patient-data evaluation, simulation or benchmark comparison, cross-validation, and limited prospective or operational evidence. The narrative extraction also captured fidelity, uncertainty, reproducibility, quality appraisal, and maturity (Table~\ref{tab:validation}; Figure~\ref{fig:validation}).
+Validation reporting ranged from conceptual discussion to empirical patient-data evaluation, simulation or benchmark comparison, cross-validation, and limited prospective evidence. Empirical or patient-data validation was mentioned in 25 records, simulation or benchmark comparison in 18, sensitivity or uncertainty analysis in 13, and cross-validation or holdout testing in eight. Six records were classified as conceptual or without model evaluation, and three mentioned expert evaluation (Table~\ref{tab:validation}; Figure~\ref{fig:validation}).
+
+Reported maturity did not map directly to the strength of validation evidence. Prototype or proof-of-concept language appeared in 43 records and theoretical or conceptual language in 21. Although deployed or operational language appeared in 19 records, only three records mentioned prospective or clinical-study evidence and one mentioned retrospective validation. Because maturity and validation categories are non-mutually exclusive review-level signals, this contrast does not establish that any specific deployed model lacked validation; it shows that operational claims were more commonly reported than the stronger study designs used to substantiate them.
+
+The extraction captured validation method, data source, fidelity criteria, uncertainty, reproducibility, and maturity, but did not directly code a formal question of interest, context-of-use statement, model influence, or decision consequence. The standards-informed comparison is therefore a description of reporting coverage, not an assessment of regulatory adequacy under the FDA or ASME frameworks.\cite{fda2023credibility,asme2018vv40}
 
 \input{generated/tables/table4_validation}
 
@@ -69,7 +77,11 @@ Applications spanned multiple clinical and research domains. Because reviews com
 
 \subsection{Barriers and future directions}
 
-Cross-cutting limitations were classified into interoperability and standards; privacy, security, and governance; ethical, legal, and regulatory issues; computing and scalability; clinical adoption and workflow; data quality and availability; and validation, evidence, and reproducibility (Table~\ref{tab:barriers}; Figure~\ref{fig:barriers}). The corresponding reporting and implementation priorities are summarized in Table~\ref{tab:recommendations}.
+Barriers were reported across nearly every layer of the proposed digital patient ecosystem. Privacy, security, and governance; ethical, legal, and regulatory issues; and computing, scalability, and resource constraints each appeared in 51 records. Interoperability and standards appeared in 49, clinical adoption and workflow in 40, data quality and availability in 40, and validation, evidence, and reproducibility in 34 (Table~\ref{tab:barriers}; Figure~\ref{fig:barriers}).
+
+The contrast between Tables~\ref{tab:pipeline} and~\ref{tab:barriers} is notable: broad interoperability or standardization concerns were reported more often than any named implementation standard. Likewise, validation and reproducibility were recurrent barriers even though detailed fidelity metrics and uncertainty analyses were less consistently extracted (Table~\ref{tab:validation}; Figure~\ref{fig:validation}). These observations locate the principal gaps at the interfaces between model construction, evidence generation, data exchange, and clinical use rather than within any single technology.
+
+The corresponding priorities in Table~\ref{tab:recommendations} emphasize standardized terminology, explicit maturity levels, stronger validation, interoperable infrastructure, reproducible supplements, workflow and governance evaluation, and prospective evidence. These recommendations summarize what the reviews proposed; they should not be interpreted as an existing consensus standard.
 
 \begin{figure}[H]
     \centering
