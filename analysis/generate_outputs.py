@@ -426,17 +426,27 @@ def figure_prisma(counts: Mapping[str, int], warnings: Sequence[str], output_dir
     del warnings  # Arithmetic warnings remain in the generated QA report, not inside the figure.
 
     left_texts = [
-        f"Records identified\nDatabases: {counts['identified_databases']:,}\nRegisters: {counts['identified_registers']:,}",
+        f"Records identified from*:\nDatabases (n = {counts['identified_databases']:,})\nRegisters (n = {counts['identified_registers']:,})",
         f"Records screened\n(n = {counts['screened']:,})",
-        f"Reports sought\n(n = {counts['reports_sought']:,})",
-        f"Reports assessed\n(n = {counts['reports_assessed']:,})",
-        f"Studies included\n(n = {counts['studies_included']:,})\nReports: {counts['reports_included']:,}",
+        f"Reports sought for\nretrieval\n(n = {counts['reports_sought']:,})",
+        f"Reports assessed for\neligibility\n(n = {counts['reports_assessed']:,})",
+        f"Studies included in review\n(n = {counts['studies_included']:,})\nReports of included\nstudies (n = {counts['reports_included']:,})",
     ]
     right_texts = [
-        f"Removed before screening\nDuplicates: {counts['duplicates_removed']:,}\nAutomation: {counts['automation_removed']:,}\nOther: {counts['other_removed']:,}",
-        f"Records excluded\n(n = {counts['screening_excluded']:,})",
+        (
+            "Records removed before\nscreening:\n"
+            f"Duplicate records removed\n(n = {counts['duplicates_removed']:,})\n"
+            f"Marked ineligible by\nautomation (n = {counts['automation_removed']:,})\n"
+            f"Removed for other reasons\n(n = {counts['other_removed']:,})"
+        ),
+        f"Records excluded**\n(n = {counts['screening_excluded']:,})",
         f"Reports not retrieved\n(n = {counts['reports_not_retrieved']:,})",
-        f"Reports excluded\nReason 1: {counts['excluded_reason_1']:,}\nReason 2: {counts['excluded_reason_2']:,}\nReason 3: {counts['excluded_reason_3']:,}",
+        (
+            "Reports excluded:\n"
+            f"Reason 1 (n = {counts['excluded_reason_1']:,})\n"
+            f"Reason 2 (n = {counts['excluded_reason_2']:,})\n"
+            f"Reason 3 (n = {counts['excluded_reason_3']:,})"
+        ),
     ]
 
     def add_box(
@@ -446,22 +456,29 @@ def figure_prisma(counts: Mapping[str, int], warnings: Sequence[str], output_dir
         width: float,
         height: float,
         label: str,
-        fill: str,
-        edge: str,
         fontsize: float,
+        line_spacing: float = 1.08,
     ) -> None:
         ax.add_patch(
-            FancyBboxPatch(
+            Rectangle(
                 (x, y),
                 width,
                 height,
-                boxstyle="round,pad=0.006,rounding_size=0.008",
-                linewidth=0.75,
-                edgecolor=edge,
-                facecolor=fill,
+                linewidth=0.8,
+                edgecolor="black",
+                facecolor="white",
             )
         )
-        ax.text(x + 0.015, y + height / 2, label, ha="left", va="center", fontsize=fontsize, color=INK)
+        ax.text(
+            x + 0.015,
+            y + height / 2,
+            label,
+            ha="left",
+            va="center",
+            fontsize=fontsize,
+            linespacing=line_spacing,
+            color="black",
+        )
 
     def add_arrow(ax: plt.Axes, x1: float, y1: float, x2: float, y2: float) -> None:
         ax.add_patch(
@@ -469,63 +486,152 @@ def figure_prisma(counts: Mapping[str, int], warnings: Sequence[str], output_dir
                 (x1, y1),
                 (x2, y2),
                 arrowstyle="-|>",
-                mutation_scale=8,
+                mutation_scale=9,
                 linewidth=0.8,
-                color="#60758A",
-                shrinkA=1,
-                shrinkB=1,
+                color="black",
+                shrinkA=0,
+                shrinkB=0,
             )
         )
 
-    fig, ax = plt.subplots(figsize=(3.35, 6.2))
-    ax.set(xlim=(0, 1), ylim=(0, 1))
-    ax.axis("off")
-    left_x, right_x, width, height = 0.10, 0.57, 0.38, 0.105
-    ys = [0.86, 0.68, 0.50, 0.32, 0.11]
-    phase_specs = [
-        ("IDENTIFICATION", 0.86, height, "#E7F0F6", NAVY),
-        ("SCREENING", 0.32, 0.465, "#EEF3F7", "#4F7896"),
-        ("INCLUDED", 0.11, height, "#E7F3EF", TEAL),
-    ]
-    for label, y, phase_height, fill, edge in phase_specs:
+    def add_phase(
+        ax: plt.Axes,
+        x: float,
+        y: float,
+        width: float,
+        height: float,
+        label: str,
+        rotation: float = 90,
+        fill: str = "#9DC3E6",
+        fontsize: float = 6.4,
+    ) -> None:
         ax.add_patch(
             FancyBboxPatch(
-                (0.018, y),
-                0.052,
-                phase_height,
+                (x, y),
+                width,
+                height,
                 boxstyle="round,pad=0.002,rounding_size=0.007",
-                linewidth=0.65,
-                edgecolor=edge,
+                linewidth=0.7,
+                edgecolor="#3A3A3A",
                 facecolor=fill,
             )
         )
-        ax.text(0.044, y + phase_height / 2, label, rotation=90, ha="center", va="center", fontsize=5.8, fontweight="semibold", color=edge)
+        ax.text(
+            x + width / 2,
+            y + height / 2,
+            label,
+            rotation=rotation,
+            ha="center",
+            va="center",
+            fontsize=fontsize,
+            fontweight="bold",
+            color="black",
+        )
+
+    fig, ax = plt.subplots(figsize=(3.35, 5.15))
+    ax.set(xlim=(0, 1), ylim=(0, 1))
+    ax.axis("off")
+    ax.add_patch(
+        FancyBboxPatch(
+            (0.12, 0.936),
+            0.83,
+            0.048,
+            boxstyle="round,pad=0.002,rounding_size=0.009",
+            linewidth=0.75,
+            edgecolor="#C89400",
+            facecolor="#FFC000",
+        )
+    )
+    ax.text(
+        0.535,
+        0.960,
+        "Identification of studies via databases and registers",
+        ha="center",
+        va="center",
+        fontsize=6.6,
+        fontweight="bold",
+        color="black",
+    )
+
+    left_x, right_x, width = 0.12, 0.58, 0.37
+    id_y, id_h = 0.740, 0.160
+    stage_h = 0.082
+    ys = [id_y, 0.620, 0.485, 0.350, 0.165]
+    heights = [id_h, stage_h, stage_h, stage_h, 0.105]
+
+    add_phase(ax, 0.025, id_y, 0.060, id_h, "Identification")
+    add_phase(ax, 0.025, 0.305, 0.060, 0.397, "Screening")
+    add_phase(ax, 0.025, ys[-1], 0.060, heights[-1], "Included")
+
     for index, y in enumerate(ys):
-        add_box(ax, left_x, y, width, height, left_texts[index], "#F2F7FA" if index < 4 else "#EDF7F3", "#8FB0C7" if index < 4 else "#80B5A5", 6.6)
+        left_font = 7.7 if index != 4 else 7.25
+        add_box(ax, left_x, y, width, heights[index], left_texts[index], left_font, 1.04)
         if index < 4:
-            add_box(ax, right_x, y, width, height, right_texts[index], "#FBFCFD", "#A5B1BE", 6.4)
-            add_arrow(ax, left_x + width, y + height / 2, right_x, y + height / 2)
+            if index == 0:
+                right_y, right_h, right_font = id_y, id_h, 6.15
+            elif index == 3:
+                right_y, right_h, right_font = 0.305, 0.127, 7.0
+            else:
+                right_y, right_h, right_font = y, heights[index], 7.55
+            add_box(ax, right_x, right_y, width, right_h, right_texts[index], right_font, 1.02)
+            add_arrow(ax, left_x + width, y + heights[index] / 2, right_x, y + heights[index] / 2)
         if index < len(ys) - 1:
-            add_arrow(ax, left_x + width / 2, y, left_x + width / 2, ys[index + 1] + height)
-    fig.subplots_adjust(left=0.01, right=0.99, bottom=0.01, top=0.99)
+            add_arrow(ax, left_x + width / 2, y, left_x + width / 2, ys[index + 1] + heights[index + 1])
+    fig.subplots_adjust(left=0, right=1, bottom=0, top=1)
     save_figure(fig, output_dir, "fig1_prisma_single_portrait")
 
     fig, ax = plt.subplots(figsize=(7.1, 3.15))
     ax.set(xlim=(0, 1), ylim=(0, 1))
     ax.axis("off")
-    xs = [0.015, 0.215, 0.415, 0.615, 0.815]
-    width, main_y, main_h = 0.17, 0.62, 0.25
+    landscape_left_texts = [
+        f"Records identified*:\nDatabases: {counts['identified_databases']:,}\nRegisters: {counts['identified_registers']:,}",
+        f"Records screened\n(n = {counts['screened']:,})",
+        f"Reports sought\n(n = {counts['reports_sought']:,})",
+        f"Reports assessed\n(n = {counts['reports_assessed']:,})",
+        f"Studies included\n(n = {counts['studies_included']:,})\nReports included\n(n = {counts['reports_included']:,})",
+    ]
+    landscape_right_texts = [
+        (
+            "Removed before\nscreening:\n"
+            f"Duplicates: {counts['duplicates_removed']:,}\n"
+            f"Automation: {counts['automation_removed']:,}\n"
+            f"Other: {counts['other_removed']:,}"
+        ),
+        f"Records excluded**\n(n = {counts['screening_excluded']:,})",
+        f"Not retrieved\n(n = {counts['reports_not_retrieved']:,})",
+        (
+            "Reports excluded:\n"
+            f"Reason 1: {counts['excluded_reason_1']:,}\n"
+            f"Reason 2: {counts['excluded_reason_2']:,}\n"
+            f"Reason 3: {counts['excluded_reason_3']:,}"
+        ),
+    ]
+
+    xs = [0.012, 0.210, 0.408, 0.606, 0.804]
+    width, main_y, main_h = 0.176, 0.535, 0.275
     phases = ["Identification", "Screening", "Retrieval", "Eligibility", "Included"]
     for index, x in enumerate(xs):
-        ax.text(x + width / 2, 0.93, phases[index], ha="center", va="center", fontsize=7.2, fontweight="semibold", color=INK)
-        add_box(ax, x, main_y, width, main_h, left_texts[index], "#F2F7FA" if index < 4 else "#EDF7F3", "#8FB0C7" if index < 4 else "#80B5A5", 6.7)
+        add_phase(
+            ax,
+            x,
+            0.875,
+            width,
+            0.075,
+            phases[index],
+            rotation=0,
+            fill="#FFC000" if index == 0 else "#9DC3E6",
+            fontsize=7.5,
+        )
+        main_font = 8.15 if index != 4 else 7.7
+        add_box(ax, x, main_y, width, main_h, landscape_left_texts[index], main_font, 1.04)
         if index < len(xs) - 1:
             add_arrow(ax, x + width, main_y + main_h / 2, xs[index + 1], main_y + main_h / 2)
-    secondary_y, secondary_h = 0.12, 0.27
+    secondary_y, secondary_h = 0.105, 0.285
     for index, x in enumerate(xs[:4]):
-        add_box(ax, x, secondary_y, width, secondary_h, right_texts[index], "#FBFCFD", "#A5B1BE", 6.4)
+        secondary_font = 7.5
+        add_box(ax, x, secondary_y, width, secondary_h, landscape_right_texts[index], secondary_font, 1.02)
         add_arrow(ax, x + width / 2, main_y, x + width / 2, secondary_y + secondary_h)
-    fig.subplots_adjust(left=0.01, right=0.99, bottom=0.02, top=0.98)
+    fig.subplots_adjust(left=0, right=1, bottom=0, top=1)
     save_figure(fig, output_dir, "fig1_prisma_double_landscape")
 
 
