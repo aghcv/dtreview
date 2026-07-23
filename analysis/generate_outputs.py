@@ -426,11 +426,11 @@ def figure_prisma(counts: Mapping[str, int], warnings: Sequence[str], output_dir
     del warnings  # Arithmetic warnings remain in the generated QA report, not inside the figure.
 
     left_texts = [
-        f"Records identified from*:\nDatabases (n = {counts['identified_databases']:,})\nRegisters (n = {counts['identified_registers']:,})",
+        f"Records identified\nfrom*:\nDatabases (n = {counts['identified_databases']:,})\nRegisters (n = {counts['identified_registers']:,})",
         f"Records screened\n(n = {counts['screened']:,})",
         f"Reports sought for\nretrieval\n(n = {counts['reports_sought']:,})",
         f"Reports assessed for\neligibility\n(n = {counts['reports_assessed']:,})",
-        f"Studies included in review\n(n = {counts['studies_included']:,})\nReports of included\nstudies (n = {counts['reports_included']:,})",
+        f"Studies included in\nreview (n = {counts['studies_included']:,})\nReports of included\nstudies (n = {counts['reports_included']:,})",
     ]
     right_texts = [
         (
@@ -470,7 +470,7 @@ def figure_prisma(counts: Mapping[str, int], warnings: Sequence[str], output_dir
             )
         )
         ax.text(
-            x + 0.015,
+            x + 0.012,
             y + height / 2,
             label,
             ha="left",
@@ -534,7 +534,7 @@ def figure_prisma(counts: Mapping[str, int], warnings: Sequence[str], output_dir
     ax.add_patch(
         FancyBboxPatch(
             (0.12, 0.936),
-            0.83,
+            0.85,
             0.048,
             boxstyle="round,pad=0.002,rounding_size=0.009",
             linewidth=0.75,
@@ -543,7 +543,7 @@ def figure_prisma(counts: Mapping[str, int], warnings: Sequence[str], output_dir
         )
     )
     ax.text(
-        0.535,
+        0.545,
         0.960,
         "Identification of studies via databases and registers",
         ha="center",
@@ -553,26 +553,28 @@ def figure_prisma(counts: Mapping[str, int], warnings: Sequence[str], output_dir
         color="black",
     )
 
-    left_x, right_x, width = 0.12, 0.58, 0.37
-    id_y, id_h = 0.740, 0.160
-    stage_h = 0.082
-    ys = [id_y, 0.620, 0.485, 0.350, 0.165]
-    heights = [id_h, stage_h, stage_h, stage_h, 0.105]
+    # Fill the portrait canvas vertically so the cells can retain a readable
+    # single-column font size without crowding or overflowing their borders.
+    left_x, right_x, width = 0.12, 0.57, 0.40
+    id_y, id_h = 0.745, 0.170
+    stage_h = 0.105
+    ys = [id_y, 0.590, 0.420, 0.250, 0.045]
+    heights = [id_h, stage_h, stage_h, stage_h, 0.130]
 
     add_phase(ax, 0.025, id_y, 0.060, id_h, "Identification")
-    add_phase(ax, 0.025, 0.305, 0.060, 0.397, "Screening")
+    add_phase(ax, 0.025, 0.235, 0.060, 0.460, "Screening")
     add_phase(ax, 0.025, ys[-1], 0.060, heights[-1], "Included")
 
     for index, y in enumerate(ys):
-        left_font = 7.7 if index != 4 else 7.25
+        left_font = 7.9 if index != 4 else 7.6
         add_box(ax, left_x, y, width, heights[index], left_texts[index], left_font, 1.04)
         if index < 4:
             if index == 0:
-                right_y, right_h, right_font = id_y, id_h, 6.15
+                right_y, right_h, right_font = id_y, id_h, 6.35
             elif index == 3:
-                right_y, right_h, right_font = 0.305, 0.127, 7.0
+                right_y, right_h, right_font = 0.235, 0.135, 7.15
             else:
-                right_y, right_h, right_font = y, heights[index], 7.55
+                right_y, right_h, right_font = y, heights[index], 7.75
             add_box(ax, right_x, right_y, width, right_h, right_texts[index], right_font, 1.02)
             add_arrow(ax, left_x + width, y + heights[index] / 2, right_x, y + heights[index] / 2)
         if index < len(ys) - 1:
