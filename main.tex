@@ -11,6 +11,15 @@
 \usepackage{tabularx}
 \usepackage{array}
 \usepackage{xcolor}
+\usepackage{placeins}
+\usepackage{float}
+
+% Keep float-only pages aligned with the manuscript text block rather than
+% vertically centering sparse tables or figures.
+\makeatletter
+\setlength{\@fptop}{0pt}
+\setlength{\@dblfptop}{0pt}
+\makeatother
 
 \graphicspath{{generated/figures/}}
 \newcolumntype{Y}{>{\raggedright\arraybackslash}X}
@@ -47,7 +56,5 @@
 
 \bibliographystyle{SageV}
 \bibliography{references}
-
-\input{sections/07_generated_outputs}
 
 \end{document}

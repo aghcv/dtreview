@@ -4,24 +4,81 @@
 
 \input{generated/snippets/results_summary}
 
-The evidence-base characteristics are summarized in Table~\ref{tab:characteristics}. Figure~\ref{fig:prisma} reports the project selection counts and displays the result of the automated arithmetic check.
+The evidence-base characteristics are summarized in Table~\ref{tab:characteristics}. Figure~\ref{fig:prisma} reports the project selection counts. Automated arithmetic checking identified a five-record discrepancy between the reported full-text exclusions and included studies; the source values are retained pending reconciliation.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\columnwidth]{fig1_prisma_single_portrait.pdf}
+    \caption{PRISMA 2020 flow of records and reports. Source counts are retained pending reconciliation of the full-text arithmetic.}
+    \label{fig:prisma}
+\end{figure}
+
+\input{generated/tables/table1_characteristics}
 
 \subsection{Conceptual definitions and the digital patient spectrum}
 
 The included reviews used digital twin terminology alongside patient digital twin, human digital twin, virtual patient, in silico patient or trial, digital patient, synthetic patient, and adjacent constructs. Patient specificity, biological hierarchy, temporal updating, and coupling direction varied independently, supporting a multidimensional spectrum rather than a single lexical definition (Table~\ref{tab:concepts}; Figure~\ref{fig:spectrum}).
 
+\input{generated/tables/table2_concepts}
+
+\begin{figure*}[!tbp]
+    \centering
+    \includegraphics[width=0.96\textwidth]{fig2_spectrum_double_landscape.pdf}
+    \caption{Digital patient spectrum. Records sharing a hierarchy--coupling category are deterministically spread within that cell to reduce overlap. Color denotes healthcare domain, marker shape denotes the primary construct, and marker area denotes the reported number of included papers.}
+    \label{fig:spectrum}
+\end{figure*}
+
 \subsection{Modeling and computational pipeline}
 
 Construction approaches were multimodal and heterogeneous. The extraction framework distinguishes data inputs, model families, personalization and coupling, named interoperability standards, computing infrastructure, and reported clinical or research outputs (Table~\ref{tab:pipeline}; Figure~\ref{fig:pipeline}).
+
+\input{generated/tables/table3_pipeline}
+
+\begin{figure*}[!tbp]
+    \centering
+    \includegraphics[width=0.96\textwidth]{fig3_pipeline_double_landscape.pdf}
+    \caption{Computational pipeline across included reviews. Values are record-level mentions and categories are not mutually exclusive.}
+    \label{fig:pipeline}
+\end{figure*}
 
 \subsection{Validation, fidelity, and clinical maturity}
 
 Validation reporting ranged from conceptual discussion to empirical patient-data evaluation, simulation or benchmark comparison, cross-validation, and limited prospective or operational evidence. The narrative extraction also captured fidelity, uncertainty, reproducibility, quality appraisal, and maturity (Table~\ref{tab:validation}; Figure~\ref{fig:validation}).
 
+\input{generated/tables/table4_validation}
+
+\begin{figure*}[!tbp]
+    \centering
+    \includegraphics[width=0.94\textwidth]{fig4_validation_double_landscape.pdf}
+    \caption{Validation approaches and reported maturity. Bars show non-mutually exclusive record-level mentions.}
+    \label{fig:validation}
+\end{figure*}
+
 \subsection{Applications}
 
 Applications spanned multiple clinical and research domains. Because reviews commonly addressed more than one domain or function, the application landscape is represented as a co-occurrence matrix rather than a forced single-label classification (Table~\ref{tab:applications}; Figure~\ref{fig:applications}).
 
+\input{generated/tables/table5_applications}
+
+\begin{figure*}[!tbp]
+    \centering
+    \includegraphics[width=0.94\textwidth]{fig5_applications_double_landscape.pdf}
+    \caption{Application landscape. Cells show the number of review records in which a healthcare domain and function co-occurred.}
+    \label{fig:applications}
+\end{figure*}
+
 \subsection{Barriers and future directions}
 
 Cross-cutting limitations were classified into interoperability and standards; privacy, security, and governance; ethical, legal, and regulatory issues; computing and scalability; clinical adoption and workflow; data quality and availability; and validation, evidence, and reproducibility (Table~\ref{tab:barriers}; Figure~\ref{fig:barriers}). The corresponding reporting and implementation priorities are summarized in Table~\ref{tab:recommendations}.
+
+\begin{figure*}[!tbp]
+    \centering
+    \includegraphics[width=0.90\textwidth]{fig6_barriers_double_landscape.pdf}
+    \caption{Cross-cutting barriers. Bars show non-mutually exclusive record-level mentions.}
+    \label{fig:barriers}
+\end{figure*}
+
+\input{generated/tables/table6_barriers}
+\input{generated/tables/table7_recommendations}
+
+\FloatBarrier

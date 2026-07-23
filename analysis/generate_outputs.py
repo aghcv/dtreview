@@ -26,7 +26,6 @@ os.environ.setdefault("XDG_CACHE_HOME", str(ROOT / ".cache"))
 Path(os.environ["MPLCONFIGDIR"]).mkdir(parents=True, exist_ok=True)
 
 import matplotlib.pyplot as plt
-import matplotlib.patheffects as path_effects
 from matplotlib.colors import LinearSegmentedColormap, Normalize
 from matplotlib.lines import Line2D
 from matplotlib.patches import FancyArrowPatch, FancyBboxPatch, Rectangle
@@ -106,23 +105,23 @@ def apply_publication_style() -> None:
     plt.rcParams.update(
         {
             "font.family": "DejaVu Sans",
-            "font.size": 9,
+            "font.size": 8,
             "text.color": INK,
             "axes.labelcolor": INK,
             "axes.titlecolor": INK,
-            "axes.titlesize": 11.5,
-            "axes.titleweight": "bold",
-            "axes.titlepad": 10,
-            "axes.labelsize": 9,
+            "axes.titlesize": 8.5,
+            "axes.titleweight": "semibold",
+            "axes.titlepad": 5,
+            "axes.labelsize": 8,
             "axes.edgecolor": GRID,
             "axes.linewidth": 0.8,
-            "axes.facecolor": "#FBFCFE",
+            "axes.facecolor": "white",
             "axes.spines.top": False,
             "axes.spines.right": False,
             "xtick.color": MUTED,
             "ytick.color": MUTED,
-            "xtick.labelsize": 8.5,
-            "ytick.labelsize": 8.5,
+            "xtick.labelsize": 7.5,
+            "ytick.labelsize": 7.5,
             "grid.color": GRID,
             "grid.linewidth": 0.7,
             "grid.alpha": 0.8,
@@ -408,20 +407,11 @@ def save_figure(fig: plt.Figure, output_dir: Path, stem: str) -> None:
     fig.savefig(
         output_dir / f"{stem}.pdf",
         bbox_inches="tight",
-        pad_inches=0.16,
+        pad_inches=0.04,
         metadata={"Creator": "dtreview reproducibility pipeline"},
     )
-    fig.savefig(output_dir / f"{stem}.png", dpi=300, bbox_inches="tight", pad_inches=0.16)
+    fig.savefig(output_dir / f"{stem}.png", dpi=300, bbox_inches="tight", pad_inches=0.04)
     plt.close(fig)
-
-
-def figure_header(fig: plt.Figure, title: str, subtitle: str) -> None:
-    fig.text(0.04, 0.975, title, ha="left", va="top", fontsize=15.5, fontweight="bold", color=INK)
-    fig.text(0.04, 0.937, subtitle, ha="left", va="top", fontsize=9, color=MUTED)
-
-
-def figure_note(fig: plt.Figure, text: str, y: float = 0.02) -> None:
-    fig.text(0.04, y, text, ha="left", va="bottom", fontsize=7.7, color=MUTED)
 
 
 def clean_bar_axis(ax: plt.Axes) -> None:
@@ -433,91 +423,14 @@ def clean_bar_axis(ax: plt.Axes) -> None:
 
 
 def figure_prisma(counts: Mapping[str, int], warnings: Sequence[str], output_dir: Path) -> None:
-    fig, ax = plt.subplots(figsize=(8.2, 10.2))
-    ax.set_xlim(0, 1)
-    ax.set_ylim(0, 1)
-    ax.axis("off")
-
-    def box(
-        x: float,
-        y: float,
-        w: float,
-        h: float,
-        text: str,
-        fill: str = "#F8FAFC",
-        edge: str = "#9AA9B8",
-    ) -> None:
-        patch = FancyBboxPatch(
-            (x, y),
-            w,
-            h,
-            boxstyle="round,pad=0.009,rounding_size=0.012",
-            linewidth=1.0,
-            edgecolor=edge,
-            facecolor=fill,
-        )
-        patch.set_path_effects(
-            [path_effects.SimplePatchShadow(offset=(1.2, -1.2), alpha=0.10), path_effects.Normal()]
-        )
-        ax.add_patch(patch)
-        ax.text(x + 0.020, y + h / 2, text, ha="left", va="center", fontsize=9.2, color=INK, wrap=True)
-
-    def arrow(x1: float, y1: float, x2: float, y2: float) -> None:
-        ax.add_patch(
-            FancyArrowPatch(
-                (x1, y1),
-                (x2, y2),
-                arrowstyle="-|>",
-                mutation_scale=12,
-                linewidth=1.1,
-                color="#60758A",
-                shrinkA=1,
-                shrinkB=1,
-            )
-        )
-
-    figure_header(
-        fig,
-        "PRISMA 2020 flow of records and reports",
-        "Draft counts transcribed from the project PRISMA source",
-    )
-
-    left_x, right_x, width, height = 0.11, 0.58, 0.35, 0.102
-    ys = [0.80, 0.64, 0.48, 0.32, 0.15]
-    phase_specs = [
-        ("IDENTIFICATION", 0.80, height, "#DCEAF5", NAVY),
-        ("SCREENING", 0.32, 0.422, "#E8F1F7", "#4F7896"),
-        ("INCLUDED", 0.15, height, "#DDF1E9", TEAL),
-    ]
-    for label, y, phase_height, fill, edge in phase_specs:
-        phase = FancyBboxPatch(
-            (0.025, y),
-            0.052,
-            phase_height,
-            boxstyle="round,pad=0.003,rounding_size=0.009",
-            linewidth=0.8,
-            edgecolor=edge,
-            facecolor=fill,
-        )
-        ax.add_patch(phase)
-        ax.text(
-            0.051,
-            y + phase_height / 2,
-            label,
-            rotation=90,
-            ha="center",
-            va="center",
-            fontsize=7.2,
-            fontweight="bold",
-            color=edge,
-        )
+    del warnings  # Arithmetic warnings remain in the generated QA report, not inside the figure.
 
     left_texts = [
         f"Records identified\nDatabases: {counts['identified_databases']:,}\nRegisters: {counts['identified_registers']:,}",
         f"Records screened\n(n = {counts['screened']:,})",
-        f"Reports sought for retrieval\n(n = {counts['reports_sought']:,})",
-        f"Reports assessed for eligibility\n(n = {counts['reports_assessed']:,})",
-        f"Studies included in review\n(n = {counts['studies_included']:,})\nReports included: {counts['reports_included']:,}",
+        f"Reports sought\n(n = {counts['reports_sought']:,})",
+        f"Reports assessed\n(n = {counts['reports_assessed']:,})",
+        f"Studies included\n(n = {counts['studies_included']:,})\nReports: {counts['reports_included']:,}",
     ]
     right_texts = [
         f"Removed before screening\nDuplicates: {counts['duplicates_removed']:,}\nAutomation: {counts['automation_removed']:,}\nOther: {counts['other_removed']:,}",
@@ -525,35 +438,95 @@ def figure_prisma(counts: Mapping[str, int], warnings: Sequence[str], output_dir
         f"Reports not retrieved\n(n = {counts['reports_not_retrieved']:,})",
         f"Reports excluded\nReason 1: {counts['excluded_reason_1']:,}\nReason 2: {counts['excluded_reason_2']:,}\nReason 3: {counts['excluded_reason_3']:,}",
     ]
-    for index, y in enumerate(ys):
-        box(
-            left_x,
-            y,
-            width,
-            height,
-            left_texts[index],
-            fill="#EDF5FA" if index < 4 else "#E8F5EF",
-            edge="#8FB0C7" if index < 4 else "#80B5A5",
-        )
-        if index < 4:
-            box(right_x, y, width, height, right_texts[index], fill="#FBFCFE")
-            arrow(left_x + width, y + height / 2, right_x, y + height / 2)
-        if index < len(ys) - 1:
-            arrow(left_x + width / 2, y, left_x + width / 2, ys[index + 1] + height)
 
-    if warnings:
-        warning = "Automated consistency check: " + " ".join(warnings)
-        ax.text(
-            0.5,
-            0.060,
-            textwrap.fill(warning, 102),
-            ha="center",
-            va="center",
-            fontsize=8.0,
-            color="#97252B",
-            bbox={"boxstyle": "round,pad=0.55", "facecolor": "#FFF3F3", "edgecolor": "#E69A9E"},
+    def add_box(
+        ax: plt.Axes,
+        x: float,
+        y: float,
+        width: float,
+        height: float,
+        label: str,
+        fill: str,
+        edge: str,
+        fontsize: float,
+    ) -> None:
+        ax.add_patch(
+            FancyBboxPatch(
+                (x, y),
+                width,
+                height,
+                boxstyle="round,pad=0.006,rounding_size=0.008",
+                linewidth=0.75,
+                edgecolor=edge,
+                facecolor=fill,
+            )
         )
-    save_figure(fig, output_dir, "fig1_prisma")
+        ax.text(x + 0.015, y + height / 2, label, ha="left", va="center", fontsize=fontsize, color=INK)
+
+    def add_arrow(ax: plt.Axes, x1: float, y1: float, x2: float, y2: float) -> None:
+        ax.add_patch(
+            FancyArrowPatch(
+                (x1, y1),
+                (x2, y2),
+                arrowstyle="-|>",
+                mutation_scale=8,
+                linewidth=0.8,
+                color="#60758A",
+                shrinkA=1,
+                shrinkB=1,
+            )
+        )
+
+    fig, ax = plt.subplots(figsize=(3.35, 6.2))
+    ax.set(xlim=(0, 1), ylim=(0, 1))
+    ax.axis("off")
+    left_x, right_x, width, height = 0.10, 0.57, 0.38, 0.105
+    ys = [0.86, 0.68, 0.50, 0.32, 0.11]
+    phase_specs = [
+        ("IDENTIFICATION", 0.86, height, "#E7F0F6", NAVY),
+        ("SCREENING", 0.32, 0.465, "#EEF3F7", "#4F7896"),
+        ("INCLUDED", 0.11, height, "#E7F3EF", TEAL),
+    ]
+    for label, y, phase_height, fill, edge in phase_specs:
+        ax.add_patch(
+            FancyBboxPatch(
+                (0.018, y),
+                0.052,
+                phase_height,
+                boxstyle="round,pad=0.002,rounding_size=0.007",
+                linewidth=0.65,
+                edgecolor=edge,
+                facecolor=fill,
+            )
+        )
+        ax.text(0.044, y + phase_height / 2, label, rotation=90, ha="center", va="center", fontsize=5.8, fontweight="semibold", color=edge)
+    for index, y in enumerate(ys):
+        add_box(ax, left_x, y, width, height, left_texts[index], "#F2F7FA" if index < 4 else "#EDF7F3", "#8FB0C7" if index < 4 else "#80B5A5", 6.6)
+        if index < 4:
+            add_box(ax, right_x, y, width, height, right_texts[index], "#FBFCFD", "#A5B1BE", 6.4)
+            add_arrow(ax, left_x + width, y + height / 2, right_x, y + height / 2)
+        if index < len(ys) - 1:
+            add_arrow(ax, left_x + width / 2, y, left_x + width / 2, ys[index + 1] + height)
+    fig.subplots_adjust(left=0.01, right=0.99, bottom=0.01, top=0.99)
+    save_figure(fig, output_dir, "fig1_prisma_single_portrait")
+
+    fig, ax = plt.subplots(figsize=(7.1, 3.15))
+    ax.set(xlim=(0, 1), ylim=(0, 1))
+    ax.axis("off")
+    xs = [0.015, 0.215, 0.415, 0.615, 0.815]
+    width, main_y, main_h = 0.17, 0.62, 0.25
+    phases = ["Identification", "Screening", "Retrieval", "Eligibility", "Included"]
+    for index, x in enumerate(xs):
+        ax.text(x + width / 2, 0.93, phases[index], ha="center", va="center", fontsize=7.2, fontweight="semibold", color=INK)
+        add_box(ax, x, main_y, width, main_h, left_texts[index], "#F2F7FA" if index < 4 else "#EDF7F3", "#8FB0C7" if index < 4 else "#80B5A5", 6.7)
+        if index < len(xs) - 1:
+            add_arrow(ax, x + width, main_y + main_h / 2, xs[index + 1], main_y + main_h / 2)
+    secondary_y, secondary_h = 0.12, 0.27
+    for index, x in enumerate(xs[:4]):
+        add_box(ax, x, secondary_y, width, secondary_h, right_texts[index], "#FBFCFD", "#A5B1BE", 6.4)
+        add_arrow(ax, x + width / 2, main_y, x + width / 2, secondary_y + secondary_h)
+    fig.subplots_adjust(left=0.01, right=0.99, bottom=0.02, top=0.98)
+    save_figure(fig, output_dir, "fig1_prisma_double_landscape")
 
 
 def categorical_cell_offsets(count: int) -> list[tuple[float, float]]:
@@ -617,123 +590,78 @@ def spread_points_within_cells(records: pd.DataFrame) -> pd.DataFrame:
 def figure_spectrum(bundle: AnalysisBundle, output_dir: Path) -> None:
     records = bundle.records.copy()
     plotted = records.dropna(subset=["hierarchy_score", "coupling_score"]).copy()
-    fig, ax = plt.subplots(figsize=(11.6, 6.6))
-    figure_header(
-        fig,
-        "Digital patient spectrum",
-        "Biological hierarchy, temporal updating, and direction of data coupling",
-    )
-    for index, fill in enumerate(["#F3F6F9", "#EEF7F5", "#FFF7EE", "#EFF4F9"]):
-        ax.axvspan(index - 0.5, index + 0.5, color=fill, zorder=0)
-    for boundary in np.arange(-0.5, 4.0, 1.0):
-        ax.axvline(boundary, color="#C7D3DE", linewidth=0.9, zorder=1)
-    for boundary in np.arange(0.5, 7.0, 1.0):
-        ax.axhline(boundary, color="#C7D3DE", linewidth=0.9, zorder=1)
-    if plotted.empty:
-        ax.text(0.5, 0.5, "No records had both hierarchy and coupling classifications.", ha="center", va="center")
-    else:
-        domain_counts = plotted["primary_domain"].value_counts()
-        retained_domains = list(domain_counts.head(7).index)
-        plotted["plot_domain"] = plotted["primary_domain"].where(plotted["primary_domain"].isin(retained_domains), "Other / mixed")
-        domain_order = list(
-            dict.fromkeys(
-                retained_domains
-                + (["Other / mixed"] if (plotted["plot_domain"] == "Other / mixed").any() else [])
-            )
+    domain_counts = plotted["primary_domain"].value_counts()
+    retained_domains = list(domain_counts.head(7).index)
+    plotted["plot_domain"] = plotted["primary_domain"].where(plotted["primary_domain"].isin(retained_domains), "Other / mixed")
+    domain_order = list(
+        dict.fromkeys(
+            retained_domains
+            + (["Other / mixed"] if (plotted["plot_domain"] == "Other / mixed").any() else [])
         )
-        color_map = {domain: COLORS[index % len(COLORS)] for index, domain in enumerate(domain_order)}
-        marker_choices = ["o", "s", "^", "D", "P", "X", "v", "h"]
-        terms = list(plotted["primary_term"].value_counts().index)
-        marker_map = {term: marker_choices[index % len(marker_choices)] for index, term in enumerate(terms)}
-        sizes = plotted["included_studies_numeric"].fillna(5).clip(lower=1, upper=250).map(lambda n: 35 + 18 * math.sqrt(n))
-        plotted = spread_points_within_cells(plotted)
-        for (domain, term), group in plotted.groupby(["plot_domain", "primary_term"], dropna=False):
-            ax.scatter(
-                group["x_plot"],
-                group["y_plot"],
-                s=sizes.loc[group.index],
-                c=color_map[domain],
-                marker=marker_map[term],
-                alpha=0.82,
-                edgecolors="white",
-                linewidths=0.9,
-                zorder=3,
-            )
-        annotation_offsets = [(7, 7), (7, -12), (-38, 8), (-38, -13), (7, 18), (7, -22), (-44, 19), (-44, -23)]
-        for offset, index in zip(annotation_offsets, plotted["included_studies_numeric"].nlargest(8).index):
-            row = plotted.loc[index]
-            article_id = row.get("article id")
-            label = f"DP-{int(article_id)}" if pd.notna(article_id) else str(index + 1)
-            ax.annotate(
-                label,
-                (row["x_plot"], row["y_plot"]),
-                xytext=offset,
-                textcoords="offset points",
-                fontsize=6.8,
-                color="#334155",
-                bbox={"boxstyle": "round,pad=0.14", "facecolor": "white", "edgecolor": "none", "alpha": 0.72},
-                zorder=4,
-            )
-
-        domain_handles = [
-            Line2D(
-                [0],
-                [0],
-                marker="o",
-                color="none",
-                markerfacecolor=color_map[d],
-                markeredgecolor="white",
-                markersize=7,
-                label=textwrap.fill(str(d), 24),
-            )
-            for d in domain_order
-        ]
-        term_handles = [
-            Line2D(
-                [0],
-                [0],
-                marker=marker_map[t],
-                color="#475569",
-                linestyle="none",
-                markersize=6,
-                label=textwrap.fill(str(t), 24),
-            )
-            for t in terms[:6]
-        ]
-        size_examples = [10, 50, 200]
-        size_handles = [
-            Line2D(
-                [0],
-                [0],
-                marker="o",
-                color="none",
-                markerfacecolor="#A9B8C7",
-                markeredgecolor="white",
-                markersize=math.sqrt(35 + 18 * math.sqrt(value)) / 1.25,
-                label=str(value),
-            )
-            for value in size_examples
-        ]
-        first_legend = ax.legend(handles=domain_handles, title="Healthcare domain", loc="upper left", bbox_to_anchor=(1.015, 1.0), fontsize=7.5, labelspacing=0.45)
-        ax.add_artist(first_legend)
-        second_legend = ax.legend(handles=term_handles, title="Primary construct", loc="center left", bbox_to_anchor=(1.015, 0.42), fontsize=7.5, labelspacing=0.45)
-        ax.add_artist(second_legend)
-        ax.legend(handles=size_handles, title="Papers included", loc="lower left", bbox_to_anchor=(1.015, 0.0), fontsize=7.5, ncol=3, columnspacing=0.7, handletextpad=0.3)
-    ax.set_xlabel("Temporal orientation and data coupling")
-    ax.set_ylabel("Highest coded biological hierarchy")
-    ax.set_xticks([0, 1, 2, 3], ["Static/manual", "One-way", "Dynamic", "Bidirectional"])
-    ax.set_yticks([1, 2, 3, 4, 5, 6], ["Cell/molecular", "Tissue", "Organ/system", "Person/body", "Population", "System of systems"])
-    ax.set_xlim(-0.5, 3.5)
-    ax.set_ylim(0.5, 6.5)
-    ax.set_axisbelow(True)
-    ax.spines["left"].set_color(GRID)
-    ax.spines["bottom"].set_color(GRID)
-    figure_note(
-        fig,
-        "Points are deterministically spread within each categorical cell to reduce overlap; bubble area reflects included-paper count (capped at 250).",
     )
-    fig.tight_layout(rect=(0.035, 0.06, 0.78, 0.89))
-    save_figure(fig, output_dir, "fig2_spectrum")
+    color_map = {domain: COLORS[index % len(COLORS)] for index, domain in enumerate(domain_order)}
+    marker_choices = ["o", "s", "^", "D", "P", "X", "v", "h"]
+    terms = list(plotted["primary_term"].value_counts().index)
+    marker_map = {term: marker_choices[index % len(marker_choices)] for index, term in enumerate(terms)}
+    sizes = plotted["included_studies_numeric"].fillna(5).clip(lower=1, upper=250).map(lambda n: 12 + 5 * math.sqrt(n))
+    plotted = spread_points_within_cells(plotted)
+
+    domain_handles = [
+        Line2D([0], [0], marker="o", color="none", markerfacecolor=color_map[d], markeredgecolor="white", markersize=5.5, label=textwrap.fill(str(d), 18))
+        for d in domain_order
+    ]
+    term_handles = [
+        Line2D([0], [0], marker=marker_map[t], color="#475569", linestyle="none", markersize=5, label=textwrap.fill(str(t), 22))
+        for t in terms[:6]
+    ]
+    size_examples = [10, 50, 200]
+    size_handles = [
+        Line2D([0], [0], marker="o", color="none", markerfacecolor="#A9B8C7", markeredgecolor="white", markersize=math.sqrt(12 + 5 * math.sqrt(value)), label=str(value))
+        for value in size_examples
+    ]
+
+    def render(figsize: tuple[float, float], portrait: bool, stem: str) -> None:
+        fig, ax = plt.subplots(figsize=figsize)
+        for index, fill in enumerate(["#F5F7F9", "#F0F7F5", "#FFF8F0", "#F1F5F8"]):
+            ax.axvspan(index - 0.5, index + 0.5, color=fill, zorder=0)
+        for boundary in np.arange(-0.5, 4.0, 1.0):
+            ax.axvline(boundary, color="#C7D3DE", linewidth=0.7, zorder=1)
+        for boundary in np.arange(0.5, 7.0, 1.0):
+            ax.axhline(boundary, color="#C7D3DE", linewidth=0.7, zorder=1)
+        if plotted.empty:
+            ax.text(0.5, 0.5, "No classified records", ha="center", va="center")
+        else:
+            for (domain, term), group in plotted.groupby(["plot_domain", "primary_term"], dropna=False):
+                ax.scatter(
+                    group["x_plot"], group["y_plot"], s=sizes.loc[group.index], c=color_map[domain],
+                    marker=marker_map[term], alpha=0.80, edgecolors="white", linewidths=0.55, zorder=3,
+                )
+        ax.set_xlabel("Temporal orientation and coupling")
+        ax.set_ylabel("Biological hierarchy")
+        ax.set_xticks([0, 1, 2, 3], ["Static/\nmanual", "One-way", "Dynamic", "Bidirectional"])
+        ax.set_yticks([1, 2, 3, 4, 5, 6], ["Cell/\nmolecular", "Tissue", "Organ/\nsystem", "Person/\nbody", "Population", "System of\nsystems"])
+        ax.set(xlim=(-0.5, 3.5), ylim=(0.5, 6.5))
+        ax.set_axisbelow(True)
+        ax.spines["left"].set_color(GRID)
+        ax.spines["bottom"].set_color(GRID)
+        if portrait:
+            first = ax.legend(handles=domain_handles, title="Domain", loc="upper left", bbox_to_anchor=(-0.28, -0.20), fontsize=5.8, title_fontsize=6.3, ncol=2, columnspacing=0.8, handletextpad=0.3, labelspacing=0.35)
+            ax.add_artist(first)
+            second = ax.legend(handles=term_handles, title="Construct", loc="upper left", bbox_to_anchor=(-0.28, -0.53), fontsize=5.8, title_fontsize=6.3, ncol=2, columnspacing=0.8, handletextpad=0.3, labelspacing=0.35)
+            ax.add_artist(second)
+            ax.legend(handles=size_handles, title="Included papers", loc="upper left", bbox_to_anchor=(-0.28, -0.82), fontsize=5.8, title_fontsize=6.3, ncol=3, columnspacing=0.8, handletextpad=0.3)
+            fig.subplots_adjust(left=0.25, right=0.98, top=0.99, bottom=0.43)
+        else:
+            first = ax.legend(handles=domain_handles, title="Domain", loc="upper left", bbox_to_anchor=(1.01, 1.0), fontsize=6.2, title_fontsize=6.7, labelspacing=0.35)
+            ax.add_artist(first)
+            second = ax.legend(handles=term_handles, title="Construct", loc="center left", bbox_to_anchor=(1.01, 0.42), fontsize=6.2, title_fontsize=6.7, labelspacing=0.35)
+            ax.add_artist(second)
+            ax.legend(handles=size_handles, title="Included papers", loc="lower left", bbox_to_anchor=(1.01, 0.0), fontsize=6.2, title_fontsize=6.7, ncol=3, columnspacing=0.6, handletextpad=0.25)
+            fig.subplots_adjust(left=0.10, right=0.79, top=0.98, bottom=0.16)
+        save_figure(fig, output_dir, stem)
+
+    render((3.35, 6.7), True, "fig2_spectrum_single_portrait")
+    render((7.1, 4.25), False, "fig2_spectrum_double_landscape")
 
 
 def figure_pipeline(bundle: AnalysisBundle, output_dir: Path) -> None:
@@ -742,62 +670,51 @@ def figure_pipeline(bundle: AnalysisBundle, output_dir: Path) -> None:
         ("Model families", bundle.counts["model_families"].sort_values(ascending=False).head(5), TEAL, "#EDF7F4"),
         ("Clinical / research outputs", bundle.counts["functions"].sort_values(ascending=False).head(6), CORAL, "#FFF3EE"),
     ]
-    fig, ax = plt.subplots(figsize=(11, 6.5))
-    ax.set_xlim(0, 1)
-    ax.set_ylim(0, 1)
+    def add_item(ax: plt.Axes, x: float, y: float, width: float, height: float, label: str, count: int, accent: str, fontsize: float) -> None:
+        ax.add_patch(
+            FancyBboxPatch(
+                (x, y), width, height, boxstyle="round,pad=0.005,rounding_size=0.008",
+                linewidth=0.6, edgecolor="#CCD6DF", facecolor="white",
+            )
+        )
+        ax.add_patch(Rectangle((x, y + 0.008), 0.006, height - 0.016, facecolor=accent, edgecolor="none"))
+        ax.text(x + 0.016, y + height / 2, textwrap.fill(str(label), 24), ha="left", va="center", fontsize=fontsize, color=INK)
+        ax.text(x + width - 0.016, y + height / 2, str(int(count)), ha="right", va="center", fontsize=fontsize, fontweight="semibold", color=accent)
+
+    fig, ax = plt.subplots(figsize=(7.1, 3.7))
+    ax.set(xlim=(0, 1), ylim=(0, 1))
     ax.axis("off")
-    figure_header(
-        fig,
-        "Computational pipeline across included reviews",
-        "Most frequently reported data inputs, model families, and clinical or research outputs",
-    )
-    xs = [0.035, 0.355, 0.675]
-    width = 0.285
+    xs, width = [0.02, 0.355, 0.69], 0.29
     for col_index, (heading, values, accent, panel_fill) in enumerate(columns):
         x = xs[col_index]
-        panel = FancyBboxPatch(
-            (x - 0.012, 0.145),
-            width + 0.024,
-            0.705,
-            boxstyle="round,pad=0.008,rounding_size=0.018",
-            linewidth=0,
-            facecolor=panel_fill,
-        )
-        ax.add_patch(panel)
-        ax.add_patch(Rectangle((x - 0.012, 0.824), width + 0.024, 0.026, facecolor=accent, edgecolor="none"))
-        ax.text(x + width / 2, 0.885, heading, ha="center", va="center", fontsize=10.8, fontweight="bold", color=INK)
-        top = 0.75
-        box_height = 0.084
-        gap = 0.019
+        ax.add_patch(FancyBboxPatch((x - 0.01, 0.035), width + 0.02, 0.925, boxstyle="round,pad=0.006,rounding_size=0.012", linewidth=0, facecolor=panel_fill))
+        ax.text(x + width / 2, 0.91, heading, ha="center", va="center", fontsize=8.3, fontweight="semibold", color=INK)
+        top, box_height, gap = 0.78, 0.105, 0.025
         for row_index, (label, count) in enumerate(values.items()):
-            y = top - row_index * (box_height + gap)
-            patch = FancyBboxPatch(
-                (x, y),
-                width,
-                box_height,
-                boxstyle="round,pad=0.008,rounding_size=0.012",
-                linewidth=0.7,
-                edgecolor="#CCD6DF",
-                facecolor="white",
-            )
-            ax.add_patch(patch)
-            ax.add_patch(Rectangle((x, y + 0.010), 0.006, box_height - 0.020, facecolor=accent, edgecolor="none"))
-            ax.text(x + 0.019, y + box_height / 2, textwrap.fill(str(label), 25), ha="left", va="center", fontsize=8.5, color=INK)
-            ax.text(
-                x + width - 0.018,
-                y + box_height / 2,
-                str(int(count)),
-                ha="center",
-                va="center",
-                fontsize=9.5,
-                fontweight="bold",
-                color="white",
-                bbox={"boxstyle": "circle,pad=0.27", "facecolor": accent, "edgecolor": "none"},
-            )
+            add_item(ax, x, top - row_index * (box_height + gap), width, box_height, str(label), int(count), accent, 6.7)
         if col_index < 2:
-            ax.add_patch(FancyArrowPatch((x + width + 0.016, 0.50), (xs[col_index + 1] - 0.016, 0.50), arrowstyle="-|>", mutation_scale=15, linewidth=1.5, color="#8595A5"))
-    figure_note(fig, "Counts are record-level mentions and are not mutually exclusive.")
-    save_figure(fig, output_dir, "fig3_pipeline")
+            ax.add_patch(FancyArrowPatch((x + width + 0.010, 0.50), (xs[col_index + 1] - 0.010, 0.50), arrowstyle="-|>", mutation_scale=10, linewidth=1.0, color="#8595A5"))
+    fig.subplots_adjust(left=0.01, right=0.99, bottom=0.01, top=0.99)
+    save_figure(fig, output_dir, "fig3_pipeline_double_landscape")
+
+    fig, ax = plt.subplots(figsize=(3.35, 7.0))
+    ax.set(xlim=(0, 1), ylim=(0, 1))
+    ax.axis("off")
+    group_tops = [0.96, 0.635, 0.345]
+    group_heights = [0.285, 0.25, 0.285]
+    for group_index, ((heading, values, accent, panel_fill), top, group_height) in enumerate(zip(columns, group_tops, group_heights)):
+        bottom = top - group_height
+        ax.add_patch(FancyBboxPatch((0.05, bottom), 0.90, group_height, boxstyle="round,pad=0.005,rounding_size=0.012", linewidth=0, facecolor=panel_fill))
+        ax.text(0.50, top - 0.026, heading, ha="center", va="center", fontsize=7.7, fontweight="semibold", color=INK)
+        item_height = (group_height - 0.075) / len(values)
+        for row_index, (label, count) in enumerate(values.items()):
+            y = top - 0.060 - (row_index + 1) * item_height
+            add_item(ax, 0.075, y, 0.85, item_height - 0.006, str(label), int(count), accent, 6.3)
+        if group_index < 2:
+            next_top = group_tops[group_index + 1]
+            ax.add_patch(FancyArrowPatch((0.50, bottom - 0.010), (0.50, next_top + 0.012), arrowstyle="-|>", mutation_scale=9, linewidth=0.9, color="#8595A5"))
+    fig.subplots_adjust(left=0.01, right=0.99, bottom=0.01, top=0.99)
+    save_figure(fig, output_dir, "fig3_pipeline_single_portrait")
 
 
 def figure_applications(bundle: AnalysisBundle, output_dir: Path) -> None:
@@ -807,36 +724,41 @@ def figure_applications(bundle: AnalysisBundle, output_dir: Path) -> None:
     for i, domain in enumerate(domains):
         for j, function in enumerate(functions):
             matrix[i, j] = int((bundle.masks["domains"][domain] & bundle.masks["functions"][function]).sum())
-    fig, ax = plt.subplots(figsize=(10.2, 6.1))
-    figure_header(
-        fig,
-        "Application landscape",
-        "Co-occurrence of healthcare domains and reported function categories",
-    )
-    image = ax.imshow(matrix, cmap=SEQUENTIAL_BLUE, aspect="auto", interpolation="nearest")
-    ax.set_xticks(range(len(functions)), [textwrap.fill(label, 16) for label in functions], rotation=32, ha="right")
-    ax.set_yticks(range(len(domains)), [textwrap.fill(label, 22) for label in domains])
-    ax.set_xticks(np.arange(-0.5, len(functions), 1), minor=True)
-    ax.set_yticks(np.arange(-0.5, len(domains), 1), minor=True)
-    ax.grid(which="minor", color="white", linewidth=1.4)
-    ax.tick_params(which="minor", bottom=False, left=False)
-    threshold = matrix.max() * 0.55 if matrix.size else 0
-    for i in range(matrix.shape[0]):
-        for j in range(matrix.shape[1]):
-            ax.text(j, i, str(matrix[i, j]), ha="center", va="center", fontsize=8.8, color="white" if matrix[i, j] > threshold else INK, fontweight="bold" if matrix[i, j] > threshold else "normal")
-    ax.set_xlabel("Function category")
-    ax.set_ylabel("Healthcare domain")
-    colorbar = fig.colorbar(image, ax=ax, fraction=0.03, pad=0.025)
-    colorbar.set_label("Number of coded review records")
-    colorbar.outline.set_visible(False)
-    for spine in ax.spines.values():
-        spine.set_visible(False)
-    figure_note(fig, "A review can contribute to multiple domain and function cells.")
-    fig.tight_layout(rect=(0.035, 0.065, 0.99, 0.89))
-    save_figure(fig, output_dir, "fig5_applications")
+    def render(figsize: tuple[float, float], portrait: bool, stem: str) -> None:
+        fig, ax = plt.subplots(figsize=figsize)
+        image = ax.imshow(matrix, cmap=SEQUENTIAL_BLUE, aspect="auto", interpolation="nearest")
+        wrap_x = 10 if portrait else 17
+        wrap_y = 15 if portrait else 22
+        rotation = 72 if portrait else 32
+        tick_size = 5.2 if portrait else 6.8
+        ax.set_xticks(range(len(functions)), [textwrap.fill(label, wrap_x) for label in functions], rotation=rotation, ha="right")
+        ax.set_yticks(range(len(domains)), [textwrap.fill(label, wrap_y) for label in domains])
+        ax.tick_params(axis="both", labelsize=tick_size)
+        ax.set_xticks(np.arange(-0.5, len(functions), 1), minor=True)
+        ax.set_yticks(np.arange(-0.5, len(domains), 1), minor=True)
+        ax.grid(which="minor", color="white", linewidth=1.0)
+        ax.tick_params(which="minor", bottom=False, left=False)
+        threshold = matrix.max() * 0.55 if matrix.size else 0
+        for i in range(matrix.shape[0]):
+            for j in range(matrix.shape[1]):
+                ax.text(j, i, str(matrix[i, j]), ha="center", va="center", fontsize=6.2 if portrait else 7.2, color="white" if matrix[i, j] > threshold else INK, fontweight="semibold" if matrix[i, j] > threshold else "normal")
+        ax.set_xlabel("Function")
+        ax.set_ylabel("Healthcare domain")
+        colorbar = fig.colorbar(image, ax=ax, fraction=0.035, pad=0.025)
+        colorbar.set_label("Review records", fontsize=6.5 if portrait else 7.5)
+        colorbar.ax.tick_params(labelsize=5.8 if portrait else 6.8)
+        colorbar.outline.set_visible(False)
+        for spine in ax.spines.values():
+            spine.set_visible(False)
+        fig.tight_layout(pad=0.15)
+        save_figure(fig, output_dir, stem)
+
+    render((3.35, 5.5), True, "fig5_applications_single_portrait")
+    render((7.1, 4.15), False, "fig5_applications_double_landscape")
 
 
-def horizontal_panel(ax: plt.Axes, values: pd.Series, title: str, color: str, total: int) -> None:
+def horizontal_panel(ax: plt.Axes, values: pd.Series, title: str, color: str, total: int, compact: bool = False) -> None:
+    del total
     ordered = values.sort_values().tail(7)
     color_scale = LinearSegmentedColormap.from_list("panel", ["#DDE7EE", color])
     norm = Normalize(vmin=0, vmax=max(float(ordered.max()), 1.0))
@@ -846,69 +768,62 @@ def horizontal_panel(ax: plt.Axes, values: pd.Series, title: str, color: str, to
         color=[color_scale(norm(value)) for value in ordered.values],
         height=0.68,
     )
-    ax.set_yticks(range(len(ordered)), [textwrap.fill(str(label), 25) for label in ordered.index])
+    ax.set_yticks(range(len(ordered)), [textwrap.fill(str(label), 19 if compact else 25) for label in ordered.index])
+    ax.tick_params(axis="y", labelsize=5.8 if compact else 6.8)
     ax.set_title(title, loc="left", fontweight="bold")
-    ax.set_xlabel("Review records")
+    ax.set_xlabel("Reviews")
     ax.set_xlim(0, max(float(ordered.max()) * 1.27, 1.0))
     clean_bar_axis(ax)
     for bar, value in zip(bars, ordered.values):
         ax.text(
             value + max(float(ordered.max()) * 0.018, 0.25),
             bar.get_y() + bar.get_height() / 2,
-            f"{int(value)}  ({value / total:.0%})",
+            str(int(value)),
             va="center",
-            fontsize=7.8,
+            fontsize=6.2 if compact else 7.0,
             color=MUTED,
         )
 
 
 def figure_validation(bundle: AnalysisBundle, output_dir: Path) -> None:
-    fig, axes = plt.subplots(1, 2, figsize=(11.2, 5.5))
     total = len(bundle.records)
-    figure_header(
-        fig,
-        "Validation and clinical maturity",
-        f"Record-level reporting across {total} coded reviews; categories are not mutually exclusive",
-    )
+    fig, axes = plt.subplots(1, 2, figsize=(7.1, 3.55))
     horizontal_panel(axes[0], bundle.counts["validation_methods"], "Validation approaches", NAVY, total)
     horizontal_panel(axes[1], bundle.counts["maturity"], "Reported maturity", TEAL, total)
-    figure_note(fig, "Missing or unclear reporting remains visible in the automated data-quality report.")
-    fig.tight_layout(rect=(0.035, 0.065, 0.99, 0.88), w_pad=3.0)
-    save_figure(fig, output_dir, "fig4_validation")
+    fig.tight_layout(pad=0.2, w_pad=2.0)
+    save_figure(fig, output_dir, "fig4_validation_double_landscape")
+
+    fig, axes = plt.subplots(2, 1, figsize=(3.35, 6.3))
+    horizontal_panel(axes[0], bundle.counts["validation_methods"], "Validation approaches", NAVY, total, compact=True)
+    horizontal_panel(axes[1], bundle.counts["maturity"], "Reported maturity", TEAL, total, compact=True)
+    fig.tight_layout(pad=0.2, h_pad=1.0)
+    save_figure(fig, output_dir, "fig4_validation_single_portrait")
 
 
 def figure_barriers(bundle: AnalysisBundle, output_dir: Path) -> None:
     values = bundle.counts["barriers"].sort_values()
-    fig, ax = plt.subplots(figsize=(9.2, 5.5))
     total = len(bundle.records)
-    figure_header(
-        fig,
-        "Cross-cutting barriers",
-        f"Implementation constraints reported across {total} coded review records",
-    )
-    norm = Normalize(vmin=0, vmax=max(float(values.max()), 1.0))
-    bars = ax.barh(
-        range(len(values)),
-        values.values,
-        color=[SEQUENTIAL_BLUE(0.30 + 0.65 * norm(value)) for value in values.values],
-        height=0.68,
-    )
-    ax.set_yticks(range(len(values)), [textwrap.fill(str(label), 30) for label in values.index])
-    ax.set_xlabel("Review records mentioning the barrier")
-    ax.set_xlim(0, max(float(values.max()) * 1.20, 1.0))
-    clean_bar_axis(ax)
-    for bar, value in zip(bars, values.values):
-        ax.text(
-            value + max(float(values.max()) * 0.016, 0.25),
-            bar.get_y() + bar.get_height() / 2,
-            f"{int(value)}  ({value / total:.0%})",
-            va="center",
-            fontsize=8.2,
-            color=MUTED,
+    del total
+
+    def render(figsize: tuple[float, float], portrait: bool, stem: str) -> None:
+        fig, ax = plt.subplots(figsize=figsize)
+        norm = Normalize(vmin=0, vmax=max(float(values.max()), 1.0))
+        bars = ax.barh(
+            range(len(values)), values.values,
+            color=[SEQUENTIAL_BLUE(0.34 + 0.61 * norm(value)) for value in values.values], height=0.66,
         )
-    figure_note(fig, "Categories are defined in analysis/category_rules.json and are not mutually exclusive.")
-    fig.tight_layout(rect=(0.035, 0.065, 0.99, 0.88))
-    save_figure(fig, output_dir, "fig6_barriers")
+        ax.set_yticks(range(len(values)), [textwrap.fill(str(label), 19 if portrait else 32) for label in values.index])
+        ax.tick_params(axis="y", labelsize=5.8 if portrait else 6.8)
+        ax.set_xlabel("Reviews")
+        ax.set_xlim(0, max(float(values.max()) * 1.16, 1.0))
+        clean_bar_axis(ax)
+        for bar, value in zip(bars, values.values):
+            ax.text(value + max(float(values.max()) * 0.014, 0.25), bar.get_y() + bar.get_height() / 2, str(int(value)), va="center", fontsize=6.2 if portrait else 7.0, color=MUTED)
+        fig.tight_layout(pad=0.15)
+        save_figure(fig, output_dir, stem)
+
+    render((3.35, 4.25), True, "fig6_barriers_single_portrait")
+    render((7.1, 3.25), False, "fig6_barriers_double_landscape")
 
 
 def write_tables(bundle: AnalysisBundle, table_dir: Path) -> None:
@@ -1134,11 +1049,10 @@ def generate(input_path: Path, output_dir: Path, rules_path: Path, prisma_path: 
     snippet_dir = output_dir / "snippets"
     for directory in (table_dir, figure_dir, data_dir, snippet_dir):
         directory.mkdir(parents=True, exist_ok=True)
-    for stale_stem in ("fig4_applications", "fig5_validation"):
-        for suffix in (".pdf", ".png"):
-            stale = figure_dir / f"{stale_stem}{suffix}"
-            if stale.exists():
-                stale.unlink()
+    for stale in figure_dir.glob("fig[1-6]_*.pdf"):
+        stale.unlink()
+    for stale in figure_dir.glob("fig[1-6]_*.png"):
+        stale.unlink()
 
     df = read_workbook(input_path)
     rules = load_rules(rules_path)
@@ -1162,6 +1076,14 @@ def generate(input_path: Path, output_dir: Path, rules_path: Path, prisma_path: 
 
 
 def verify_outputs(output_dir: Path) -> None:
+    figure_stems = [
+        "fig1_prisma",
+        "fig2_spectrum",
+        "fig3_pipeline",
+        "fig4_validation",
+        "fig5_applications",
+        "fig6_barriers",
+    ]
     expected = [
         *(output_dir / "tables" / f"table{i}_{name}.tex" for i, name in [
             (1, "characteristics"),
@@ -1172,14 +1094,10 @@ def verify_outputs(output_dir: Path) -> None:
             (6, "barriers"),
             (7, "recommendations"),
         ]),
-        *(output_dir / "figures" / f"fig{i}_{name}.pdf" for i, name in [
-            (1, "prisma"),
-            (2, "spectrum"),
-            (3, "pipeline"),
-            (4, "validation"),
-            (5, "applications"),
-            (6, "barriers"),
-        ]),
+        *(output_dir / "figures" / f"{stem}_{variant}.{suffix}"
+          for stem in figure_stems
+          for variant in ("single_portrait", "double_landscape")
+          for suffix in ("pdf", "png")),
         output_dir / "data" / "record_level_classification.csv",
         output_dir / "data_quality_report.md",
     ]

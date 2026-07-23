@@ -35,7 +35,7 @@ make test
 The pipeline does not edit the extraction workbook. It writes only to `generated/` and produces:
 
 - Tables 1--7 as both `.tex` and `.csv`;
-- Figures 1--6 as both `.pdf` and `.png`;
+- Figures 1--6 as vector `.pdf` and 300-dpi `.png` files in two publication variants: `single_portrait` for one-column placement and `double_landscape` for two-column placement;
 - `generated/data/record_level_classification.csv` for audit;
 - manuscript-ready result snippets; and
 - `generated/data_quality_report.md`.
