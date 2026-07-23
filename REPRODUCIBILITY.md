@@ -37,6 +37,13 @@ Primary terminology is the first matching construct found, in order, in the titl
 
 Every figure is exported as vector PDF for the manuscript and PNG for convenient review.
 
+All figures inherit a centralized publication theme from `apply_publication_style()` in
+`analysis/generate_outputs.py`. The theme uses embedded TrueType text, a
+colorblind-conscious palette, restrained grid lines, consistent titles and notes, and
+white backgrounds suitable for print. PNG review files are exported at 300 dpi; PDF
+files remain vector-based. Bar figures report both record counts and percentages, while
+the underlying classifications and numerical values are unchanged by the visual styling.
+
 ## Tables
 
 Tables 1--7 are written both as CSV (easy to audit) and LaTeX (included directly by the manuscript). The Results section imports generated snippets rather than repeating hard-coded counts.
