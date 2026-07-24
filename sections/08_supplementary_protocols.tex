@@ -1,4 +1,6 @@
 \clearpage
+\setcounter{table}{0}
+\renewcommand{\thetable}{S\arabic{table}}
 \section{Supplementary Appendix S1: Prespecified review protocol}
 \label{app:protocol}
 
@@ -38,6 +40,57 @@ Exclusions comprised primary studies without a structured review methodology; ed
 \subsection{Selection, extraction, and appraisal}
 
 The protocol specified independent title and abstract assessment by two reviewers in CADIMA, followed by adjudication under the procedure in Supplementary Appendix S2. A standardized, piloted extraction form was organized around the six review questions. One reviewer extracted each included report and a second reviewer checked the entry for accuracy.
+
+\begin{table*}[!htbp]
+\centering
+\small
+\caption{Research-question-aligned data-extraction framework.}
+\label{tab:extraction-framework}
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{0.20\textwidth}YY@{}}
+\toprule
+\textbf{Question or domain} & \textbf{Extraction fields} & \textbf{Role in the synthesis} \\
+\midrule
+General review descriptors &
+Record and study identifiers; author, publication year, and title; data location; number of included studies; reviewer comments. &
+Characterize the evidence base and maintain traceability to the source review. \\
+\addlinespace[0.45em]
+
+RQ1: Conceptual framing &
+Core definition; related constructs; distinguishing features; framework or classification scheme; biological hierarchy level. &
+Define the boundaries, dimensions, and taxonomic structure of the digital patient spectrum. \\
+\addlinespace[0.45em]
+
+RQ2: Construction and modeling frameworks &
+Model type; data sources; data-coupling mode; temporal orientation; modeling approach; integration standards; computing infrastructure; tool or platform. &
+Compare data-to-model pipelines, model architectures, and degrees of patient specificity and updating. \\
+\addlinespace[0.45em]
+
+RQ3: Validation and fidelity &
+Validation method and data source; fidelity metric or criterion; reproducibility; reported quality or risk-of-bias tool; key findings on reliability and use of appraisal findings in synthesis or interpretation. &
+Evaluate model credibility and how each review judged and used the quality of its underlying evidence. \\
+\addlinespace[0.45em]
+
+RQ4: Application spectrum and functional roles &
+Healthcare domain; function category; maturity level; reported benefits and limitations. &
+Map clinical and preclinical use cases, functions, and translational maturity. \\
+\addlinespace[0.45em]
+
+RQ5: Barriers and infrastructural gaps &
+Ethical issues; technical barriers; data limitations; interoperability gaps; organizational barriers. &
+Synthesize recurring constraints on scalability, interoperability, and clinical integration. \\
+\addlinespace[0.45em]
+
+RQ6: Future directions and standardization priorities &
+Research priorities; standardization recommendations; emerging technologies; collaboration and governance; reviewer comments. &
+Consolidate the proposed research, governance, and standardization roadmap. \\
+\addlinespace[0.45em]
+
+Administrative and quality-control fields &
+Reviewer initials; extraction date; review-type-specific quality score; administrative notes. &
+Maintain an auditable extraction and verification trail. \\
+\bottomrule
+\end{tabularx}
+\end{table*}
 
 The protocol prespecified review-type-appropriate methodological appraisal using AMSTAR~2 or SANRA and a domain-based CADIMA assessment of review-level bias and validity. Appraisal covered eligibility, search completeness, study selection, extraction reliability, appraisal of included evidence, synthesis, validation claims, generalizability, implementation, and sponsorship. Ratings were intended to contextualize the synthesis rather than determine eligibility automatically.
 
